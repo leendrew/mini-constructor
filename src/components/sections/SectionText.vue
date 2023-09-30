@@ -1,14 +1,11 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-interface TextData {
-  title: string;
-  description: string;
-}
+import type { SectionTextData } from '@/store';
 export default defineComponent({
   name: 'SectionText',
   props: {
     data: {
-      type: Object as PropType<TextData>,
+      type: Object as PropType<SectionTextData>,
       required: true,
     },
   },

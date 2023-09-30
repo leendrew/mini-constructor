@@ -1,11 +1,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import type { GlobalState } from '@/store';
 export default defineComponent({
   name: 'Header',
   computed: {
     isEditing: {
       get() {
-        return this.$store.state.global.isEditing;
+        return (this.$store.state.global as GlobalState).isEditing;
       },
       set() {
         this.$store.dispatch('toggleIsEditing');

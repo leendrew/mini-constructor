@@ -1,6 +1,4 @@
-export interface GlobalState {
-  isEditing: boolean;
-}
+import type { GlobalState } from './types';
 
 export const state: GlobalState = {
   isEditing: false,

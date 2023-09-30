@@ -1,12 +1,12 @@
 import type { Module } from 'vuex';
 import type { RootState } from '../store';
-import type { GlobalState } from './types';
+import type { SectionState } from './types';
 import { state } from './state';
 import { getters } from './getters';
 import { actions } from './actions';
 import { mutations } from './mutations';
 
-export const global: Module<GlobalState, RootState> = {
+export const section: Module<SectionState, RootState> = {
   state,
   getters,
   actions,
