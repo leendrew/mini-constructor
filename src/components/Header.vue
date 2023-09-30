@@ -16,7 +16,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-app-bar app>
+  <v-app-bar app color="white" elevation="0">
     <v-container>
       <v-row justify="center">
         <v-switch v-model="isEditing" :label="isEditing ? 'Edit mode' : 'View mode'" hide-details />
