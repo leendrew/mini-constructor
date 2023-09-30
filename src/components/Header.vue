@@ -2,18 +2,25 @@
 import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'Header',
-  data() {
-    return {
-      isEditMod: false,
-    };
+  computed: {
+    isEditing: {
+      get() {
+        return this.$store.state.isEditing;
+      },
+      set() {
+        this.$store.dispatch('toggleIsEditing');
+      },
+    },
   },
 });
 </script>
 
 <template>
   <v-app-bar app>
-    <v-container center>
-      <v-switch v-model="isEditMod" :label="isEditMod ? 'Edit mode' : 'View mode'" hide-details />
+    <v-container>
+      <v-row justify="center">
+        <v-switch v-model="isEditing" :label="isEditing ? 'Edit mode' : 'View mode'" hide-details />
+      </v-row>
     </v-container>
   </v-app-bar>
 </template>
