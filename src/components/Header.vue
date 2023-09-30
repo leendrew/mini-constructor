@@ -5,7 +5,7 @@ export default defineComponent({
   computed: {
     isEditing: {
       get() {
-        return this.$store.state.isEditing;
+        return this.$store.state.global.isEditing;
       },
       set() {
         this.$store.dispatch('toggleIsEditing');
