@@ -5,7 +5,7 @@ Simple page constructor from 3 types of sections
 ## Stack
 
 - TypeScript
-- Vue 2.7
+- Vue 2.7 Options API
 - Vite
 - Vuex
 - Vuetify
