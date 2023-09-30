@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    Header: typeof import('./src/components/Header.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
@@ -17,6 +18,10 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
     VApp: typeof import('vuetify/lib')['VApp']
+    VAppBar: typeof import('vuetify/lib')['VAppBar']
+    VContainer: typeof import('vuetify/lib')['VContainer']
+    VMain: typeof import('vuetify/lib')['VMain']
+    VSwitch: typeof import('vuetify/lib')['VSwitch']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }
 }
