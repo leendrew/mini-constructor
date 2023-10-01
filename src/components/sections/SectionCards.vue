@@ -18,7 +18,6 @@ export default defineComponent({
     },
   },
   data() {
-    console.log('data');
     return {
       cardsOnEditMod: {} as Record<string, SectionCardsData>,
       newCardId: generateNumberId(),
@@ -35,21 +34,23 @@ export default defineComponent({
     checkIsCardOnEditMod(id: number) {
       return this.cardsOnEditMod[id] !== undefined;
     },
-    applyCardChange(card: SectionCardsData) {
+    updateCard(card: SectionCardsData) {
       this.removeCardFromEditModById(card.id);
+      console.log('update Card', card);
       // this.$emit('update', card);
     },
     deleteCard(id: number) {
+      console.log('delete Card', id);
       // this.$emit('delete', id);
+    },
+    addCard(card: SectionCardsData) {
+      console.log('add Card', card);
+      // this.$emit('add', card);
     },
     resetState() {
       this.cardsOnEditMod = {};
       this.newCardId = generateNumberId();
       this.addCardToEditMod({ id: this.newCardId, title: '', description: '' });
-    },
-    addNewCard(card: SectionCardsData) {
-      console.log('new Card', card);
-      // this.$emit('add', card);
     },
   },
   watch: {
@@ -73,6 +74,7 @@ export default defineComponent({
                 v-model="cardsOnEditMod[card.id].description"
                 outlined
                 auto-grow
+                rows="3"
                 required
               />
             </v-card-title>
@@ -81,15 +83,24 @@ export default defineComponent({
             <v-card-title>{{ card.title }}</v-card-title>
             <v-card-text> {{ card.description }}</v-card-text>
           </template>
-          <v-card-actions class="mt-auto">
-            <template v-if="isOnEditMod && !checkIsCardOnEditMod(card.id)">
+          <template v-if="isOnEditMod && !checkIsCardOnEditMod(card.id)">
+            <v-card-actions class="mt-auto">
               <v-btn color="amber" text outlined @click="addCardToEditMod(card)">Edit</v-btn>
               <v-btn color="red" text outlined @click="deleteCard(card.id)">Delete</v-btn>
-            </template>
-            <template v-else-if="isOnEditMod && checkIsCardOnEditMod(card.id)">
-              <v-btn color="primary" text outlined block @click="applyCardChange(card)">Save</v-btn>
-            </template>
-          </v-card-actions>
+            </v-card-actions>
+          </template>
+          <template v-else-if="isOnEditMod && checkIsCardOnEditMod(card.id)">
+            <v-card-actions class="mt-auto">
+              <v-btn
+                color="primary"
+                text
+                outlined
+                block
+                @click="updateCard(cardsOnEditMod[card.id])"
+                >Save</v-btn
+              >
+            </v-card-actions>
+          </template>
         </v-card>
       </template>
       <template v-if="isOnEditMod">
@@ -106,17 +117,12 @@ export default defineComponent({
               v-model="cardsOnEditMod[newCardId].description"
               outlined
               auto-grow
+              rows="3"
               required
             />
           </v-card-title>
           <v-card-actions class="mt-auto">
-            <v-btn
-              color="primary"
-              text
-              outlined
-              block
-              @click="addNewCard(cardsOnEditMod[newCardId])"
-            >
+            <v-btn color="primary" text outlined block @click="addCard(cardsOnEditMod[newCardId])">
               Add New Card
             </v-btn>
           </v-card-actions>
