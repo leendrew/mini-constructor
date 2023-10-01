@@ -26,5 +26,18 @@ export const state: SectionState = {
         },
       ],
     },
+    {
+      id: 2,
+      type: 'text',
+      data: {
+        title: '',
+        description: '',
+      },
+    },
+    {
+      id: 3,
+      type: 'cards',
+      data: [],
+    },
   ],
 };

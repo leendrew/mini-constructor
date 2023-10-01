@@ -2,8 +2,6 @@
 import { defineComponent, type PropType } from 'vue';
 import type { SectionCardsData, GlobalState } from '@/store';
 import { generateNumberId } from '@/utils';
-// TODO values validation
-// TODO emits
 export default defineComponent({
   name: 'SectionCards',
   props: {
@@ -52,6 +50,9 @@ export default defineComponent({
       this.newCardId = generateNumberId();
       this.addCardToEditMod({ id: this.newCardId, title: '', description: '' });
     },
+    deleteSection() {
+      // this.$emit('delete section');
+    },
   },
   watch: {
     isOnEditMod() {
@@ -66,7 +67,11 @@ export default defineComponent({
     <div class="grid">
       <template v-for="card of data">
         <v-card class="d-flex flex-column" rounded outlined tag="article">
-          <template v-if="checkIsCardOnEditMod(card.id)">
+          <template v-if="!checkIsCardOnEditMod(card.id)">
+            <v-card-title>{{ card.title }}</v-card-title>
+            <v-card-text> {{ card.description }}</v-card-text>
+          </template>
+          <template v-else>
             <v-card-title>
               <v-text-field label="Title" v-model="cardsOnEditMod[card.id].title" outlined />
               <v-textarea
@@ -78,10 +83,6 @@ export default defineComponent({
                 required
               />
             </v-card-title>
-          </template>
-          <template v-else>
-            <v-card-title>{{ card.title }}</v-card-title>
-            <v-card-text> {{ card.description }}</v-card-text>
           </template>
           <template v-if="isOnEditMod && !checkIsCardOnEditMod(card.id)">
             <v-card-actions class="mt-auto">
@@ -97,8 +98,9 @@ export default defineComponent({
                 outlined
                 block
                 @click="updateCard(cardsOnEditMod[card.id])"
-                >Save</v-btn
               >
+                Save
+              </v-btn>
             </v-card-actions>
           </template>
         </v-card>
@@ -129,6 +131,16 @@ export default defineComponent({
         </v-card>
       </template>
     </div>
+    <template v-if="isOnEditMod">
+      <v-row class="mt-4">
+        <v-col>
+          <v-btn color="red" text outlined @click="deleteSection">Delete Section</v-btn>
+        </v-col>
+      </v-row>
+    </template>
+    <template v-if="!data.length && !isOnEditMod">
+      <p class="text-h5 text-center">This section is empty :( Turn on Edit mod and add content</p>
+    </template>
   </v-sheet>
 </template>
 
