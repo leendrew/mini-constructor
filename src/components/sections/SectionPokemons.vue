@@ -10,8 +10,8 @@ export default defineComponent({
     },
   },
   computed: {
-    isEditing() {
-      return (this.$store.state.global as GlobalState).isEditing;
+    isOnEditMod() {
+      return (this.$store.state.global as GlobalState).isOnEditMod;
     },
   },
 });

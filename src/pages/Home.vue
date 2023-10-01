@@ -7,8 +7,8 @@ import type { GlobalState, SectionState } from '@/store';
 export default defineComponent({
   name: 'Home',
   computed: {
-    isEditing() {
-      return (this.$store.state.global as GlobalState).isEditing;
+    isOnEditMod() {
+      return (this.$store.state.global as GlobalState).isOnEditMod;
     },
     sections() {
       return (this.$store.state.section as SectionState).sections;

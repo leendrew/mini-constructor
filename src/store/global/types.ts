@@ -1,3 +1,3 @@
 export interface GlobalState {
-  isEditing: boolean;
+  isOnEditMod: boolean;
 }
