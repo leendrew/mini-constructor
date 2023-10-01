@@ -3,10 +3,13 @@ import { defineComponent } from 'vue';
 import SectionText from '@/components/sections/SectionText.vue';
 import SectionCards from '@/components/sections/SectionCards.vue';
 import SectionPokemons from '@/components/sections/SectionPokemons.vue';
-import type { SectionState } from '@/store';
+import type { GlobalState, SectionState } from '@/store';
 export default defineComponent({
   name: 'Home',
   computed: {
+    isEditing() {
+      return (this.$store.state.global as GlobalState).isEditing;
+    },
     sections() {
       return (this.$store.state.section as SectionState).sections;
     },

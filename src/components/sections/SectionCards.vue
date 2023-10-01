@@ -1,12 +1,17 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import type { SectionCardsData } from '@/store';
+import type { SectionCardsData, GlobalState } from '@/store';
 export default defineComponent({
   name: 'SectionCards',
   props: {
     data: {
       type: Array as PropType<SectionCardsData[]>,
       required: true,
+    },
+  },
+  computed: {
+    isEditing() {
+      return (this.$store.state.global as GlobalState).isEditing;
     },
   },
 });

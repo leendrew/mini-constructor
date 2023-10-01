@@ -1,12 +1,17 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import type { SectionTextData } from '@/store';
+import type { SectionTextData, GlobalState } from '@/store';
 export default defineComponent({
   name: 'SectionText',
   props: {
     data: {
       type: Object as PropType<SectionTextData>,
       required: true,
+    },
+  },
+  computed: {
+    isEditing() {
+      return (this.$store.state.global as GlobalState).isEditing;
     },
   },
 });
