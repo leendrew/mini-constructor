@@ -1,6 +1,9 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import type { SectionCardsData, GlobalState } from '@/store';
+import { generateNumberId } from '@/utils';
+// TODO values validation
+// TODO emits
 export default defineComponent({
   name: 'SectionCards',
   props: {
@@ -14,6 +17,44 @@ export default defineComponent({
       return (this.$store.state.global as GlobalState).isOnEditMod;
     },
   },
+  data() {
+    console.log('data');
+    return {
+      cardsOnEditMod: {} as Record<string, SectionCardsData>,
+      newCardId: generateNumberId(),
+    };
+  },
+  methods: {
+    addCardToEditMod(card: SectionCardsData) {
+      this.cardsOnEditMod = { ...this.cardsOnEditMod, [card.id]: { ...card } };
+    },
+    removeCardFromEditModById(id: number) {
+      delete this.cardsOnEditMod[id];
+      this.cardsOnEditMod = { ...this.cardsOnEditMod };
+    },
+    checkIsCardOnEditMod(id: number) {
+      return this.cardsOnEditMod[id] !== undefined;
+    },
+    applyCardChange(card: SectionCardsData) {
+      this.removeCardFromEditModById(card.id);
+      // this.$emit('update', card);
+    },
+    deleteCard(id: number) {
+      // this.$emit('delete', id);
+    },
+    resetState() {
+      this.cardsOnEditMod = {};
+      this.newCardId = generateNumberId();
+      this.addCardToEditMod({ id: this.newCardId, title: '', description: '' });
+    },
+    addNewCard(card: SectionCardsData) {
+      console.log('new Card', card);
+      // this.$emit('add', card);
+    },
+  },
+  watch: {
+    isOnEditMod() {
+      this.resetState();
     },
   },
 });
@@ -23,9 +64,62 @@ export default defineComponent({
   <v-sheet class="mt-6 pa-6" rounded outlined tag="section">
     <div class="grid">
       <template v-for="card of data">
-        <v-card rounded outlined tag="article">
-          <v-card-title>{{ card.title }}</v-card-title>
-          <v-card-text> {{ card.description }}</v-card-text>
+        <v-card class="d-flex flex-column" rounded outlined tag="article">
+          <template v-if="checkIsCardOnEditMod(card.id)">
+            <v-card-title>
+              <v-text-field label="Title" v-model="cardsOnEditMod[card.id].title" outlined />
+              <v-textarea
+                label="Description"
+                v-model="cardsOnEditMod[card.id].description"
+                outlined
+                auto-grow
+                required
+              />
+            </v-card-title>
+          </template>
+          <template v-else>
+            <v-card-title>{{ card.title }}</v-card-title>
+            <v-card-text> {{ card.description }}</v-card-text>
+          </template>
+          <v-card-actions class="mt-auto">
+            <template v-if="isOnEditMod && !checkIsCardOnEditMod(card.id)">
+              <v-btn color="amber" text outlined @click="addCardToEditMod(card)">Edit</v-btn>
+              <v-btn color="red" text outlined @click="deleteCard(card.id)">Delete</v-btn>
+            </template>
+            <template v-else-if="isOnEditMod && checkIsCardOnEditMod(card.id)">
+              <v-btn color="primary" text outlined block @click="applyCardChange(card)">Save</v-btn>
+            </template>
+          </v-card-actions>
+        </v-card>
+      </template>
+      <template v-if="isOnEditMod">
+        <v-card class="d-flex flex-column" rounded outlined tag="article">
+          <v-card-title>
+            <v-text-field
+              label="Title"
+              v-model="cardsOnEditMod[newCardId].title"
+              outlined
+              required
+            />
+            <v-textarea
+              label="Description"
+              v-model="cardsOnEditMod[newCardId].description"
+              outlined
+              auto-grow
+              required
+            />
+          </v-card-title>
+          <v-card-actions class="mt-auto">
+            <v-btn
+              color="primary"
+              text
+              outlined
+              block
+              @click="addNewCard(cardsOnEditMod[newCardId])"
+            >
+              Add New Card
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </template>
     </div>
