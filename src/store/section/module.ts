@@ -1,3 +1,5 @@
+import type { GetterTree, ActionTree, MutationTree } from 'vuex';
+import type { RootState } from '../store';
 import type { SectionState } from './types';
 
 export const state: SectionState = {
@@ -41,3 +43,9 @@ export const state: SectionState = {
     },
   ],
 };
+
+export const getters: GetterTree<SectionState, RootState> = {};
+
+export const actions: ActionTree<SectionState, RootState> = {};
+
+export const mutations: MutationTree<SectionState> = {};
