@@ -5,7 +5,7 @@ export default defineComponent({
   name: 'SectionPokemons',
   props: {
     data: {
-      type: Object as PropType<SectionPokemonsData>,
+      type: Array as PropType<SectionPokemonsData[]>,
       required: true,
     },
   },
