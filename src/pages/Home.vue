@@ -14,6 +14,21 @@ export default defineComponent({
       return (this.$store.state.section as SectionState).sections;
     },
   },
+  data() {
+    return {
+      sectionTypes: ['text', 'cards', 'pokemons'],
+      selectedSectionType: '',
+    };
+  },
+  methods: {
+    resetData() {
+      this.selectedSectionType = '';
+    },
+    addNewSection() {
+      // this.$store.dispatch('addNewSection', this.selectedSectionType);
+      this.resetData();
+    },
+  },
 });
 </script>
 
@@ -35,6 +50,17 @@ export default defineComponent({
         <p class="text-h5 text-center">
           Your sections are empty :( Turn on Edit mod and add them (they will be saved)
         </p>
+      </v-sheet>
+    </template>
+    <template v-if="isOnEditMod">
+      <v-sheet class="mt-6 pa-6" rounded outlined tag="section">
+        <v-select
+          label="Section Type"
+          :items="sectionTypes"
+          v-model="selectedSectionType"
+          outlined
+        />
+        <v-btn color="primary" text outlined @click="addNewSection">Add New Section</v-btn>
       </v-sheet>
     </template>
   </v-container>
