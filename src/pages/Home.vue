@@ -58,6 +58,7 @@ export default defineComponent({
     <template v-if="isOnEditMod">
       <v-sheet class="mt-6 pa-6" rounded outlined tag="section">
         <v-select
+          class="w-fc"
           label="Section Type"
           :items="sectionTypes"
           v-model="selectedSectionType"

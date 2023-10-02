@@ -19,4 +19,8 @@ export default defineComponent({
 html {
   overflow-y: auto;
 }
+
+.w-fc {
+  width: fit-content;
+}
 </style>
