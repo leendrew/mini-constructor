@@ -51,6 +51,7 @@ export default defineComponent({
       this.addCardToEditMod({ id: this.newCardId, title: '', description: '' });
     },
     deleteSection() {
+      console.log('delete section');
       // this.$emit('delete section');
     },
   },
@@ -58,6 +59,9 @@ export default defineComponent({
     isOnEditMod() {
       this.resetState();
     },
+  },
+  beforeMount() {
+    this.resetState();
   },
 });
 </script>

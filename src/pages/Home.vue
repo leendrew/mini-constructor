@@ -25,7 +25,10 @@ export default defineComponent({
       this.selectedSectionType = '';
     },
     addNewSection() {
-      // this.$store.dispatch('addNewSection', this.selectedSectionType);
+      if (!this.selectedSectionType) {
+        return;
+      }
+      this.$store.dispatch('addNewSection', this.selectedSectionType);
       this.resetData();
     },
   },
@@ -60,7 +63,9 @@ export default defineComponent({
           v-model="selectedSectionType"
           outlined
         />
-        <v-btn color="primary" text outlined @click="addNewSection">Add New Section</v-btn>
+        <v-btn color="primary" text outlined :disabled="!selectedSectionType" @click="addNewSection"
+          >Add New Section</v-btn
+        >
       </v-sheet>
     </template>
   </v-container>
