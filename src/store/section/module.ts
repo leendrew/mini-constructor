@@ -1,7 +1,16 @@
 import { generateNumberId } from '@/utils';
 import type { GetterTree, ActionTree, MutationTree } from 'vuex';
 import type { RootState } from '../store';
-import type { Section, SectionState } from './types';
+import type {
+  Section,
+  SectionState,
+  SectionTypes,
+  SectionData,
+  SectionId,
+  SectionCards,
+  AddCardPayload,
+  DeleteCardPayload,
+} from './types';
 
 export const state: SectionState = {
   sections: [
@@ -53,25 +62,51 @@ export const state: SectionState = {
 export const getters: GetterTree<SectionState, RootState> = {};
 
 export const actions: ActionTree<SectionState, RootState> = {
-  async addNewSection({ commit }, sectionType: 'text' | 'cards' | 'pokemons') {
-    const sectionDataMap = {
+  addNewSection({ commit }, sectionType: SectionTypes) {
+    const sectionDataMap: Record<SectionTypes, SectionData> = {
       text: { title: '', description: '' },
       cards: [],
       pokemons: [],
     };
-    const sectionId = generateNumberId();
-    const sectionData = sectionDataMap[sectionType];
+    const newSectionId = generateNumberId();
+    const newSectionData = sectionDataMap[sectionType];
     const newSection = {
-      id: sectionId,
+      id: newSectionId,
       type: sectionType,
-      data: sectionData,
+      data: newSectionData,
     };
     commit('addSection', newSection);
+  },
+  deleteSectionById({ commit }, sectionId: SectionId) {
+    commit('deleteById', sectionId);
+  },
+  addCard({ commit }, payload: AddCardPayload) {
+    commit('addCard', payload);
+  },
+  deleteCardById({ commit }, payload: DeleteCardPayload) {
+    commit('deleteCardById', payload);
   },
 };
 
 export const mutations: MutationTree<SectionState> = {
   addSection(state, newSection: Section) {
     state.sections.push(newSection);
+  },
+  deleteById(state, sectionId: SectionId) {
+    state.sections = state.sections.filter((section) => section.id !== sectionId);
+  },
+  addCard(state, payload: AddCardPayload) {
+    state.sections.forEach((section) => {
+      if (section.id === payload.sectionId) {
+        (section as SectionCards).data.push(payload.card);
+      }
+    });
+  },
+  deleteCardById(state, payload: DeleteCardPayload) {
+    state.sections.forEach((section) => {
+      if (section.id === payload.sectionId) {
+        section.data = (section as SectionCards).data.filter((data) => data.id !== payload.cardId);
+      }
+    });
   },
 };

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import type { SectionCardsData, GlobalState } from '@/store';
+import type { SectionCardsData, GlobalState, SectionCards } from '@/store';
 import { generateNumberId } from '@/utils';
 export default defineComponent({
   name: 'SectionCards',
@@ -33,26 +33,36 @@ export default defineComponent({
       return this.cardsOnEditMod[id] !== undefined;
     },
     updateCard(card: SectionCardsData) {
+      if (!this.checkIsDataEmpty(card)) {
+        return;
+      }
       this.removeCardFromEditModById(card.id);
-      console.log('update Card', card);
-      // this.$emit('update', card);
+      this.$emit('updateCard', card);
     },
-    deleteCard(id: number) {
-      console.log('delete Card', id);
-      // this.$emit('delete', id);
+    deleteCard(id: SectionCards['id']) {
+      this.$emit('deleteCardById', id);
     },
     addCard(card: SectionCardsData) {
-      console.log('add Card', card);
-      // this.$emit('add', card);
+      if (!this.checkIsDataEmpty(card)) {
+        return;
+      }
+      this.removeCardFromEditModById(card.id);
+      this.$emit('addCard', card);
+      this.resetNewCardState();
     },
     resetState() {
       this.cardsOnEditMod = {};
+      this.resetNewCardState();
+    },
+    resetNewCardState() {
       this.newCardId = generateNumberId();
       this.addCardToEditMod({ id: this.newCardId, title: '', description: '' });
     },
     deleteSection() {
-      console.log('delete section');
-      // this.$emit('delete section');
+      this.$emit('deleteSection');
+    },
+    checkIsDataEmpty(card: SectionCardsData) {
+      return card.title && card.description;
     },
   },
   watch: {
@@ -102,6 +112,7 @@ export default defineComponent({
                 outlined
                 block
                 @click="updateCard(cardsOnEditMod[card.id])"
+                :disabled="!checkIsDataEmpty(cardsOnEditMod[card.id])"
               >
                 Save
               </v-btn>
@@ -128,7 +139,14 @@ export default defineComponent({
             />
           </v-card-title>
           <v-card-actions class="mt-auto">
-            <v-btn color="primary" text outlined block @click="addCard(cardsOnEditMod[newCardId])">
+            <v-btn
+              color="primary"
+              text
+              outlined
+              block
+              @click="addCard(cardsOnEditMod[newCardId])"
+              :disabled="!checkIsDataEmpty(cardsOnEditMod[newCardId])"
+            >
               Add New Card
             </v-btn>
           </v-card-actions>

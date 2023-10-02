@@ -3,7 +3,13 @@ import { defineComponent } from 'vue';
 import SectionText from '@/components/sections/SectionText.vue';
 import SectionCards from '@/components/sections/SectionCards.vue';
 import SectionPokemons from '@/components/sections/SectionPokemons.vue';
-import type { GlobalState, SectionState } from '@/store';
+import type {
+  GlobalState,
+  SectionState,
+  SectionId,
+  AddCardPayload,
+  DeleteCardPayload,
+} from '@/store';
 export default defineComponent({
   name: 'Home',
   computed: {
@@ -31,6 +37,15 @@ export default defineComponent({
       this.$store.dispatch('addNewSection', this.selectedSectionType);
       this.resetData();
     },
+    deleteSectionById(sectionId: SectionId) {
+      this.$store.dispatch('deleteSectionById', sectionId);
+    },
+    addCard(payload: AddCardPayload) {
+      this.$store.dispatch('addCard', payload);
+    },
+    deleteCardById(payload: DeleteCardPayload) {
+      this.$store.dispatch('deleteCardById', payload);
+    },
   },
 });
 </script>
@@ -39,12 +54,25 @@ export default defineComponent({
   <v-container>
     <template v-if="!!sections.length">
       <template v-for="section of sections">
-        <SectionText :key="section.id" v-if="section.type === 'text'" :data="section.data" />
-        <SectionCards :key="section.id" v-else-if="section.type === 'cards'" :data="section.data" />
+        <SectionText
+          :key="section.id"
+          v-if="section.type === 'text'"
+          :data="section.data"
+          @deleteSection="deleteSectionById(section.id)"
+        />
+        <SectionCards
+          :key="section.id"
+          v-else-if="section.type === 'cards'"
+          :data="section.data"
+          @deleteSection="deleteSectionById(section.id)"
+          @addCard="(card) => addCard({ sectionId: section.id, card })"
+          @deleteCardById="(cardId) => deleteCardById({ sectionId: section.id, cardId })"
+        />
         <SectionPokemons
           :key="section.id"
           v-else-if="section.type === 'pokemons'"
           :data="section.data"
+          @deleteSection="deleteSectionById(section.id)"
         />
       </template>
     </template>
@@ -64,9 +92,15 @@ export default defineComponent({
           v-model="selectedSectionType"
           outlined
         />
-        <v-btn color="primary" text outlined :disabled="!selectedSectionType" @click="addNewSection"
-          >Add New Section</v-btn
+        <v-btn
+          color="primary"
+          text
+          outlined
+          :disabled="!selectedSectionType"
+          @click="addNewSection"
         >
+          Add New Section
+        </v-btn>
       </v-sheet>
     </template>
   </v-container>

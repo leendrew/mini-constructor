@@ -38,3 +38,19 @@ export type Section = SectionText | SectionCards | SectionPokemons;
 export interface SectionState {
   sections: Section[];
 }
+
+export type SectionTypes = Section['type'];
+
+export type SectionId = Section['id'];
+
+export type SectionData = Section['data'];
+
+export type AddCardPayload = {
+  sectionId: SectionId;
+  card: SectionCardsData;
+};
+
+export type DeleteCardPayload = {
+  sectionId: SectionId;
+  cardId: SectionCards['id'];
+};

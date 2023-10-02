@@ -26,8 +26,10 @@ export default defineComponent({
       this.isOnLocalEditMod = !this.isOnLocalEditMod;
     },
     updateData() {
-      console.log('update text section state');
-      // this.$emit('update', { title: this.title, description: this.description });
+      if (!this.checkIsEmpty()) {
+        return;
+      }
+      this.$emit('updateData', { title: this.title, description: this.description });
       this.resetState();
     },
     resetState() {
@@ -36,7 +38,10 @@ export default defineComponent({
       this.description = this.data.description;
     },
     deleteSection() {
-      // this.$emit('delete section');
+      this.$emit('deleteSection');
+    },
+    checkIsEmpty() {
+      return this.title && this.description;
     },
   },
   watch: {
@@ -63,7 +68,9 @@ export default defineComponent({
           <v-btn color="amber" text outlined @click="toggleLocalEditMod">Edit</v-btn>
         </template>
         <template v-else>
-          <v-btn color="primary" text outlined @click="updateData">Save</v-btn>
+          <v-btn color="primary" text outlined @click="updateData" :disabled="!checkIsEmpty()">
+            Save
+          </v-btn>
         </template>
       </div>
       <div class="mt-4">
