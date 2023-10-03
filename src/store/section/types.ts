@@ -23,8 +23,8 @@ export interface SectionCards {
 
 export interface SectionPokemonsData {
   id: number;
-  title: string;
-  description: string;
+  name: string;
+  imageUrl: string;
 }
 
 export interface SectionPokemons {
@@ -50,9 +50,9 @@ export interface AddCardPayload {
   card: SectionCardsData;
 }
 
-export interface DeleteCardPayload {
+export interface DeleteDataPayload {
   sectionId: SectionId;
-  cardId: SectionCards['id'];
+  dataId: SectionCards['id'] | SectionPokemons['id'];
 }
 
 export interface UpdateTextPayload {
@@ -74,16 +74,3 @@ export interface UpdatePokemonsPayload {
 }
 
 export type UpdateSectionPayload = UpdateTextPayload | UpdateCardPayload | UpdatePokemonsPayload;
-
-export interface FetchManyPokemonsResult {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  result: { name: string; url: string }[];
-}
-
-export interface FetchSinglePokemonResult {
-  id: number;
-  name: string;
-  sprites: { front_default: string };
-}
