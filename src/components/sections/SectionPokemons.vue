@@ -1,6 +1,9 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import type { SectionPokemonsData, GlobalState } from '@/store';
+import SectionBase from './SectionBase.vue';
+import { pokemonsApi } from '@/api';
+import type { SectionPokemonsData, GlobalState, SectionPokemons } from '@/store';
+import { fetchPokemons } from '@/api/pokemons';
 export default defineComponent({
   name: 'SectionPokemons',
   props: {
@@ -13,29 +16,84 @@ export default defineComponent({
     isOnEditMod() {
       return (this.$store.state.global as GlobalState).isOnEditMod;
     },
+    filteredPokemons(): SectionPokemonsData[] {
+      return this.searchValue
+        ? this.data.filter((pokemon) => pokemon.name.includes(this.searchValue))
+        : this.data;
+    },
+  },
+  data() {
+    return {
+      limit: 5,
+      offset: 0,
+      searchValue: '',
+    };
   },
   methods: {
     deleteSection() {
       this.$emit('deleteSection');
     },
+    deletePokemon(id: SectionPokemons['id']) {
+      this.$emit('deletePokemonById', id);
+    },
+    fetchPokemons() {
+      pokemonsApi.fetchPokemons(this.limit, this.offset).then((res) => {
+        this.$emit('updateData', res);
+        this.offset += 5;
+      });
+    },
+  },
+  mounted() {
+    this.fetchPokemons();
   },
 });
 </script>
 
 <template>
-  <v-sheet class="mt-6 pa-6" rounded outlined tag="section">
-    <p class="text-h3">Section Pokemons</p>
+  <SectionBase>
+    <v-text-field
+      class="w-fc align-self-center"
+      outlined
+      label="Name"
+      placeholder="Filter by name..."
+      hide-details
+      v-model="searchValue"
+    />
+    <template v-if="!!filteredPokemons.length">
+      <div class="grid">
+        <template v-for="pokemon of filteredPokemons">
+          <v-card :key="pokemon.id" class="d-flex flex-column" rounded outlined tag="article">
+            <v-img :src="pokemon.imageUrl" />
+            <v-card-title>{{ pokemon.name }}</v-card-title>
+            <template v-if="isOnEditMod">
+              <v-card-actions class="mt-auto">
+                <v-btn color="red" text outlined block @click="deletePokemon(pokemon.id)">
+                  Delete
+                </v-btn>
+              </v-card-actions>
+            </template>
+          </v-card>
+        </template>
+      </div>
+    </template>
+    <template v-else>
+      <p class="text-h5 text-center">No match results :(</p>
+    </template>
     <template v-if="isOnEditMod">
-      <v-row class="mt-4">
-        <v-col>
-          <v-btn color="red" text outlined @click="deleteSection">Delete Section</v-btn>
-        </v-col>
-      </v-row>
+      <v-btn class="align-self-start" color="primary" text outlined @click="fetchPokemons">
+        Fetch More Pokemons
+      </v-btn>
+      <v-btn class="align-self-start" color="red" text outlined @click="deleteSection">
+        Delete Section
+      </v-btn>
     </template>
-    <template v-if="!data.length && !isOnEditMod">
-      <p class="text-h5 text-center">This section is empty :( Turn on Edit mod and add content</p>
-    </template>
-  </v-sheet>
+  </SectionBase>
 </template>
 
-<style scoped></style>
+<style scoped>
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: 16px;
+}
+</style>
