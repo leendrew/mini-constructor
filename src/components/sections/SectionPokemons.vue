@@ -25,7 +25,7 @@ export default defineComponent({
   data() {
     return {
       limit: 5,
-      offset: 0,
+      offset: (!!this.data.length && this.data[this.data.length - 1].id) || 0,
       searchValue: '',
     };
   },
@@ -39,12 +39,9 @@ export default defineComponent({
     fetchPokemons() {
       pokemonsApi.fetchPokemons(this.limit, this.offset).then((res) => {
         this.$emit('updateData', res);
-        this.offset += 5;
+        this.offset += this.limit;
       });
     },
-  },
-  mounted() {
-    this.fetchPokemons();
   },
 });
 </script>

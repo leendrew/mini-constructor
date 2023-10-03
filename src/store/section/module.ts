@@ -1,3 +1,4 @@
+import { pokemonsApi } from '@/api';
 import { generateNumberId } from '@/utils';
 import type { GetterTree, ActionTree, MutationTree } from 'vuex';
 import type { RootState } from '../store';
@@ -55,7 +56,7 @@ export const state: SectionState = {
 export const getters: GetterTree<SectionState, RootState> = {};
 
 export const actions: ActionTree<SectionState, RootState> = {
-  addNewSection({ commit }, sectionType: SectionTypes) {
+  async addNewSection({ commit }, sectionType: SectionTypes) {
     const sectionDataMap: Record<SectionTypes, SectionData> = {
       text: { title: 'Sample Title', description: 'Sample Description' },
       cards: [{ id: 0, title: 'Sample Card Title', description: 'Sample Card Description' }],
@@ -69,6 +70,14 @@ export const actions: ActionTree<SectionState, RootState> = {
       data: newSectionData,
     };
     commit('addSection', newSection);
+    if (sectionType === 'pokemons') {
+      const pokemonsSectionData = await pokemonsApi.fetchPokemons();
+      commit('updatePokemons', {
+        sectionId: newSectionId,
+        sectionType: sectionType,
+        data: pokemonsSectionData,
+      });
+    }
   },
   deleteSectionById({ commit }, sectionId: SectionId) {
     commit('deleteById', sectionId);
