@@ -111,7 +111,7 @@ export const actions: ActionTree<SectionState, RootState> = {
 
 export const mutations: MutationTree<SectionState> = {
   addSection(state, newSection: Section) {
-    state.sections.push(newSection);
+    state.sections.push({ ...newSection });
   },
   deleteById(state, sectionId: SectionId) {
     state.sections = state.sections.filter((section) => section.id !== sectionId);
@@ -119,7 +119,7 @@ export const mutations: MutationTree<SectionState> = {
   addCard(state, payload: AddCardPayload) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
-        (section as SectionCards).data.push(payload.card);
+        (section as SectionCards).data.push({ ...payload.card });
       }
     });
   },
@@ -154,7 +154,7 @@ export const mutations: MutationTree<SectionState> = {
   updatePokemons(state, payload: UpdatePokemonsPayload) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
-        (section as SectionPokemons).data.concat(payload.data);
+        (section as SectionPokemons).data.concat([...payload.data]);
       }
     });
   },

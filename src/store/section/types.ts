@@ -45,32 +45,32 @@ export type SectionId = Section['id'];
 
 export type SectionData = Section['data'];
 
-export type AddCardPayload = {
+export interface AddCardPayload {
   sectionId: SectionId;
   card: SectionCardsData;
-};
+}
 
-export type DeleteCardPayload = {
+export interface DeleteCardPayload {
   sectionId: SectionId;
   cardId: SectionCards['id'];
-};
+}
 
-export type UpdateTextPayload = {
+export interface UpdateTextPayload {
   sectionId: SectionId;
   sectionType: SectionText['type'];
   data: SectionTextData;
-};
+}
 
-export type UpdateCardPayload = {
+export interface UpdateCardPayload {
   sectionId: SectionId;
   sectionType: SectionCards['type'];
   data: SectionCardsData;
-};
+}
 
-export type UpdatePokemonsPayload = {
+export interface UpdatePokemonsPayload {
   sectionId: SectionId;
   sectionType: SectionPokemons['type'];
   data: SectionPokemonsData[];
-};
+}
 
 export type UpdateSectionPayload = UpdateTextPayload | UpdateCardPayload | UpdatePokemonsPayload;
