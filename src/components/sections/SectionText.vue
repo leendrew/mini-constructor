@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
+import SectionBase from './SectionBase.vue';
 import type { SectionTextData, GlobalState } from '@/store';
 export default defineComponent({
   name: 'SectionText',
@@ -53,32 +54,43 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-sheet class="mt-6 pa-6" rounded outlined tag="section">
-    <template v-if="!isOnLocalEditMod && data.title && data.description">
+  <SectionBase>
+    <template v-if="!isOnLocalEditMod">
       <h4 class="text-h4">{{ data.title }}</h4>
-      <p class="text-body-1 mt-4 mb-0">{{ data.description }}</p>
+      <p class="text-body-1 mb-0">{{ data.description }}</p>
     </template>
-    <template v-else-if="isOnLocalEditMod">
-      <v-text-field label="Title" v-model="title" outlined required />
-      <v-textarea label="Description" v-model="description" outlined auto-grow rows="3" required />
+    <template v-else>
+      <v-text-field label="Title" v-model="title" outlined hide-details />
+      <v-textarea
+        label="Description"
+        v-model="description"
+        outlined
+        hide-details
+        auto-grow
+        rows="3"
+      />
     </template>
     <template v-if="isOnEditMod">
-      <div class="mt-4">
-        <template v-if="!isOnLocalEditMod">
-          <v-btn color="amber" text outlined @click="toggleLocalEditMod">Edit</v-btn>
-        </template>
-        <template v-else>
-          <v-btn color="primary" text outlined @click="updateData" :disabled="!checkIsEmpty()">
-            Save
-          </v-btn>
-        </template>
-      </div>
-      <div class="mt-4">
-        <v-btn color="red" text outlined @click="deleteSection">Delete Section</v-btn>
-      </div>
+      <template v-if="!isOnLocalEditMod">
+        <v-btn class="align-self-start" color="amber" text outlined @click="toggleLocalEditMod">
+          Edit
+        </v-btn>
+      </template>
+      <template v-else>
+        <v-btn
+          class="align-self-start"
+          color="primary"
+          text
+          outlined
+          @click="updateData"
+          :disabled="!checkIsEmpty()"
+        >
+          Save
+        </v-btn>
+      </template>
+      <v-btn class="align-self-start" color="red" text outlined @click="deleteSection">
+        Delete Section
+      </v-btn>
     </template>
-    <template v-if="!isOnEditMod && !data.title && !data.description">
-      <p class="text-h5 text-center">This section is empty :( Turn on Edit mod and add content</p>
-    </template>
-  </v-sheet>
+  </SectionBase>
 </template>

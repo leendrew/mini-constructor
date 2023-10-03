@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
+import SectionBase from './SectionBase.vue';
 import type { SectionCardsData, GlobalState, SectionCards } from '@/store';
 import { generateNumberId } from '@/utils';
 export default defineComponent({
@@ -40,6 +41,9 @@ export default defineComponent({
       this.$emit('updateCardById', card);
     },
     deleteCard(id: SectionCards['id']) {
+      if (this.data.length === 1) {
+        return;
+      }
       this.$emit('deleteCardById', id);
     },
     addCard(card: SectionCardsData) {
@@ -77,31 +81,45 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-sheet class="mt-6 pa-6" rounded outlined tag="section">
+  <SectionBase>
     <div class="grid">
       <template v-for="card of data">
-        <v-card class="d-flex flex-column" rounded outlined tag="article">
+        <v-card :key="card.id" class="d-flex flex-column" rounded outlined tag="article">
           <template v-if="!checkIsCardOnEditMod(card.id)">
             <v-card-title>{{ card.title }}</v-card-title>
             <v-card-text> {{ card.description }}</v-card-text>
           </template>
           <template v-else>
             <v-card-title>
-              <v-text-field label="Title" v-model="cardsOnEditMod[card.id].title" outlined />
+              <v-text-field
+                label="Title"
+                v-model="cardsOnEditMod[card.id].title"
+                outlined
+                hide-details
+              />
               <v-textarea
+                class="mt-4"
                 label="Description"
                 v-model="cardsOnEditMod[card.id].description"
                 outlined
                 auto-grow
                 rows="3"
-                required
+                hide-details
               />
             </v-card-title>
           </template>
           <template v-if="isOnEditMod && !checkIsCardOnEditMod(card.id)">
             <v-card-actions class="mt-auto">
               <v-btn color="amber" text outlined @click="addCardToEditMod(card)">Edit</v-btn>
-              <v-btn color="red" text outlined @click="deleteCard(card.id)">Delete</v-btn>
+              <v-btn
+                color="red"
+                text
+                outlined
+                @click="deleteCard(card.id)"
+                :disabled="data.length === 1"
+              >
+                Delete
+              </v-btn>
             </v-card-actions>
           </template>
           <template v-else-if="isOnEditMod && checkIsCardOnEditMod(card.id)">
@@ -127,15 +145,16 @@ export default defineComponent({
               label="Title"
               v-model="cardsOnEditMod[newCardId].title"
               outlined
-              required
+              hide-details
             />
             <v-textarea
+              class="mt-4"
               label="Description"
               v-model="cardsOnEditMod[newCardId].description"
               outlined
               auto-grow
               rows="3"
-              required
+              hide-details
             />
           </v-card-title>
           <v-card-actions class="mt-auto">
@@ -154,16 +173,11 @@ export default defineComponent({
       </template>
     </div>
     <template v-if="isOnEditMod">
-      <v-row class="mt-4">
-        <v-col>
-          <v-btn color="red" text outlined @click="deleteSection">Delete Section</v-btn>
-        </v-col>
-      </v-row>
+      <v-btn class="align-self-start" color="red" text outlined @click="deleteSection">
+        Delete Section
+      </v-btn>
     </template>
-    <template v-if="!data.length && !isOnEditMod">
-      <p class="text-h5 text-center">This section is empty :( Turn on Edit mod and add content</p>
-    </template>
-  </v-sheet>
+  </SectionBase>
 </template>
 
 <style scoped>

@@ -1,5 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Stack from '@/components/ui/Stack.vue';
+import SectionBase from '@/components/sections/SectionBase.vue';
 import SectionText from '@/components/sections/SectionText.vue';
 import SectionCards from '@/components/sections/SectionCards.vue';
 import SectionPokemons from '@/components/sections/SectionPokemons.vue';
@@ -56,34 +58,35 @@ export default defineComponent({
 
 <template>
   <v-container>
-    <template v-if="!!sections.length">
-      <template v-for="section of sections">
-        <SectionText
-          :key="section.id"
-          v-if="section.type === 'text'"
-          :data="section.data"
-          @deleteSection="deleteSectionById(section.id)"
-          @updateData="
-            (data) => updateSection({ sectionId: section.id, sectionType: section.type, data })
-          "
-        />
-        <SectionCards
-          :key="section.id"
-          v-else-if="section.type === 'cards'"
-          :data="section.data"
-          @deleteSection="deleteSectionById(section.id)"
-          @addCard="(card) => addCard({ sectionId: section.id, card })"
+    <Stack direction="column" :gap="4">
+      <template v-if="!!sections.length">
+        <template v-for="section of sections">
+          <SectionText
+            v-if="section.type === 'text'"
+            :key="section.id"
+            :data="section.data"
+            @deleteSection="deleteSectionById(section.id)"
+            @updateData="
+              (data) => updateSection({ sectionId: section.id, sectionType: section.type, data })
+            "
+          />
+          <SectionCards
+            v-else-if="section.type === 'cards'"
+            :key="section.id"
+            :data="section.data"
+            @deleteSection="deleteSectionById(section.id)"
+            @addCard="(card) => addCard({ sectionId: section.id, card })"
             @deleteCardById="(cardId) => deleteDataById({ sectionId: section.id, dataId: cardId })"
-          @updateCardById="
-            (card) =>
-              updateSection({ sectionId: section.id, sectionType: section.type, data: card })
-          "
-        />
-        <SectionPokemons
-          :key="section.id"
-          v-else-if="section.type === 'pokemons'"
-          :data="section.data"
-          @deleteSection="deleteSectionById(section.id)"
+            @updateCardById="
+              (card) =>
+                updateSection({ sectionId: section.id, sectionType: section.type, data: card })
+            "
+          />
+          <SectionPokemons
+            v-else-if="section.type === 'pokemons'"
+            :key="section.id"
+            :data="section.data"
+            @deleteSection="deleteSectionById(section.id)"
             @deletePokemonById="
               (pokemonId) => deleteDataById({ sectionId: section.id, dataId: pokemonId })
             "
@@ -91,35 +94,39 @@ export default defineComponent({
               (pokemons) =>
                 updateSection({ sectionId: section.id, sectionType: section.type, data: pokemons })
             "
-        />
+          />
+        </template>
       </template>
-    </template>
-    <template v-else>
-      <v-sheet class="mt-6 pa-6" rounded outlined tag="section">
-        <p class="text-h5 text-center">
-          Your sections are empty :( Turn on Edit mod and add them (they will be saved)
-        </p>
-      </v-sheet>
-    </template>
-    <template v-if="isOnEditMod">
-      <v-sheet class="mt-6 pa-6" rounded outlined tag="section">
-        <v-select
-          class="w-fc"
-          label="Section Type"
-          :items="sectionTypes"
-          v-model="selectedSectionType"
-          outlined
-        />
-        <v-btn
-          color="primary"
-          text
-          outlined
-          :disabled="!selectedSectionType"
-          @click="addNewSection"
-        >
-          Add New Section
-        </v-btn>
-      </v-sheet>
-    </template>
+      <template v-else-if="!isOnEditMod">
+        <SectionBase>
+          <p class="text-h5 text-center">
+            This page is empty :( Turn on Edit mod and add sections (they will be saved after
+            refresh page)
+          </p>
+        </SectionBase>
+      </template>
+      <template v-if="isOnEditMod">
+        <SectionBase>
+          <v-select
+            class="align-self-center"
+            label="Section Type"
+            outlined
+            hide-details
+            v-model="selectedSectionType"
+            :items="sectionTypes"
+          />
+          <v-btn
+            class="align-self-center"
+            color="primary"
+            text
+            outlined
+            :disabled="!selectedSectionType"
+            @click="addNewSection"
+          >
+            Add New Section
+          </v-btn>
+        </SectionBase>
+      </template>
+    </Stack>
   </v-container>
 </template>
