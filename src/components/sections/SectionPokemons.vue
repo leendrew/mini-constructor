@@ -17,7 +17,7 @@ export default defineComponent({
       return (this.$store.state.global as GlobalState).isOnEditMod;
     },
     filteredPokemons(): SectionPokemonsData[] {
-      return this.searchValue
+      return !!this.data.length && this.searchValue
         ? this.data.filter((pokemon) => pokemon.name.includes(this.searchValue))
         : this.data;
     },
@@ -78,7 +78,7 @@ export default defineComponent({
         </template>
       </div>
     </template>
-    <template v-else>
+    <template v-else-if="!!data.length">
       <p class="text-h5 text-center">No match results :(</p>
     </template>
     <template v-if="isOnEditMod">
