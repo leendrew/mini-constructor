@@ -74,3 +74,16 @@ export interface UpdatePokemonsPayload {
 }
 
 export type UpdateSectionPayload = UpdateTextPayload | UpdateCardPayload | UpdatePokemonsPayload;
+
+export interface FetchManyPokemonsResult {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  result: { name: string; url: string }[];
+}
+
+export interface FetchSinglePokemonResult {
+  id: number;
+  name: string;
+  sprites: { front_default: string };
+}
