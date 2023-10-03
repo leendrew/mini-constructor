@@ -8,7 +8,7 @@ import type {
   SectionState,
   SectionId,
   AddCardPayload,
-  DeleteCardPayload,
+  DeleteDataPayload,
   UpdateSectionPayload,
 } from '@/store';
 export default defineComponent({
@@ -44,8 +44,8 @@ export default defineComponent({
     addCard(payload: AddCardPayload) {
       this.$store.dispatch('addCard', payload);
     },
-    deleteCardById(payload: DeleteCardPayload) {
-      this.$store.dispatch('deleteCardById', payload);
+    deleteDataById(payload: DeleteDataPayload) {
+      this.$store.dispatch('deleteDataById', payload);
     },
     updateSection(payload: UpdateSectionPayload) {
       this.$store.dispatch('updateSection', payload);
@@ -73,7 +73,7 @@ export default defineComponent({
           :data="section.data"
           @deleteSection="deleteSectionById(section.id)"
           @addCard="(card) => addCard({ sectionId: section.id, card })"
-          @deleteCardById="(cardId) => deleteCardById({ sectionId: section.id, cardId })"
+            @deleteCardById="(cardId) => deleteDataById({ sectionId: section.id, dataId: cardId })"
           @updateCardById="
             (card) =>
               updateSection({ sectionId: section.id, sectionType: section.type, data: card })
@@ -84,6 +84,13 @@ export default defineComponent({
           v-else-if="section.type === 'pokemons'"
           :data="section.data"
           @deleteSection="deleteSectionById(section.id)"
+            @deletePokemonById="
+              (pokemonId) => deleteDataById({ sectionId: section.id, dataId: pokemonId })
+            "
+            @updateData="
+              (pokemons) =>
+                updateSection({ sectionId: section.id, sectionType: section.type, data: pokemons })
+            "
         />
       </template>
     </template>

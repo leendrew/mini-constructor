@@ -11,7 +11,7 @@ import type {
   SectionCards,
   SectionPokemons,
   AddCardPayload,
-  DeleteCardPayload,
+  DeleteDataPayload,
   UpdateSectionPayload,
   UpdateTextPayload,
   UpdateCardPayload,
@@ -45,19 +45,6 @@ export const state: SectionState = {
       ],
     },
     {
-      id: 2,
-      type: 'text',
-      data: {
-        title: '',
-        description: '',
-      },
-    },
-    {
-      id: 3,
-      type: 'cards',
-      data: [],
-    },
-    {
       id: 4,
       type: 'pokemons',
       data: [],
@@ -70,8 +57,8 @@ export const getters: GetterTree<SectionState, RootState> = {};
 export const actions: ActionTree<SectionState, RootState> = {
   addNewSection({ commit }, sectionType: SectionTypes) {
     const sectionDataMap: Record<SectionTypes, SectionData> = {
-      text: { title: '', description: '' },
-      cards: [],
+      text: { title: 'Sample Title', description: 'Sample Description' },
+      cards: [{ id: 0, title: 'Sample Card Title', description: 'Sample Card Description' }],
       pokemons: [],
     };
     const newSectionId = generateNumberId();
@@ -89,8 +76,8 @@ export const actions: ActionTree<SectionState, RootState> = {
   addCard({ commit }, payload: AddCardPayload) {
     commit('addCard', payload);
   },
-  deleteCardById({ commit }, payload: DeleteCardPayload) {
-    commit('deleteCardById', payload);
+  deleteDataById({ commit }, payload: DeleteDataPayload) {
+    commit('deleteDataById', payload);
   },
   updateSection({ commit }, payload: UpdateSectionPayload) {
     switch (payload.sectionType) {
@@ -123,12 +110,11 @@ export const mutations: MutationTree<SectionState> = {
       }
     });
   },
-  deleteCardById(state, payload: DeleteCardPayload) {
+  deleteDataById(state, payload: DeleteDataPayload) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
-        (section as SectionCards).data = (section as SectionCards).data.filter(
-          (data) => data.id !== payload.cardId,
-        );
+        // @ts-expect-error
+        section.data = section.data.filter((data) => data.id !== payload.dataId);
       }
     });
   },
@@ -154,7 +140,7 @@ export const mutations: MutationTree<SectionState> = {
   updatePokemons(state, payload: UpdatePokemonsPayload) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
-        (section as SectionPokemons).data.concat([...payload.data]);
+        (section as SectionPokemons).data.push(...payload.data);
       }
     });
   },
