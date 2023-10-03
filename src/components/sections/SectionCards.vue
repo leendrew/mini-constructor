@@ -37,7 +37,7 @@ export default defineComponent({
         return;
       }
       this.removeCardFromEditModById(card.id);
-      this.$emit('updateCard', card);
+      this.$emit('updateCardById', card);
     },
     deleteCard(id: SectionCards['id']) {
       this.$emit('deleteCardById', id);

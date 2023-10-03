@@ -30,7 +30,7 @@ export default defineComponent({
         return;
       }
       this.$emit('updateData', { title: this.title, description: this.description });
-      this.resetState();
+      this.isOnLocalEditMod = false;
     },
     resetState() {
       this.isOnLocalEditMod = false;

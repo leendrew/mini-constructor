@@ -9,6 +9,7 @@ import type {
   SectionId,
   AddCardPayload,
   DeleteCardPayload,
+  UpdateSectionPayload,
 } from '@/store';
 export default defineComponent({
   name: 'Home',
@@ -46,6 +47,9 @@ export default defineComponent({
     deleteCardById(payload: DeleteCardPayload) {
       this.$store.dispatch('deleteCardById', payload);
     },
+    updateSection(payload: UpdateSectionPayload) {
+      this.$store.dispatch('updateSection', payload);
+    },
   },
 });
 </script>
@@ -59,6 +63,9 @@ export default defineComponent({
           v-if="section.type === 'text'"
           :data="section.data"
           @deleteSection="deleteSectionById(section.id)"
+          @updateData="
+            (data) => updateSection({ sectionId: section.id, sectionType: section.type, data })
+          "
         />
         <SectionCards
           :key="section.id"
@@ -67,6 +74,10 @@ export default defineComponent({
           @deleteSection="deleteSectionById(section.id)"
           @addCard="(card) => addCard({ sectionId: section.id, card })"
           @deleteCardById="(cardId) => deleteCardById({ sectionId: section.id, cardId })"
+          @updateCardById="
+            (card) =>
+              updateSection({ sectionId: section.id, sectionType: section.type, data: card })
+          "
         />
         <SectionPokemons
           :key="section.id"

@@ -54,3 +54,23 @@ export type DeleteCardPayload = {
   sectionId: SectionId;
   cardId: SectionCards['id'];
 };
+
+export type UpdateTextPayload = {
+  sectionId: SectionId;
+  sectionType: SectionText['type'];
+  data: SectionTextData;
+};
+
+export type UpdateCardPayload = {
+  sectionId: SectionId;
+  sectionType: SectionCards['type'];
+  data: SectionCardsData;
+};
+
+export type UpdatePokemonsPayload = {
+  sectionId: SectionId;
+  sectionType: SectionPokemons['type'];
+  data: SectionPokemonsData[];
+};
+
+export type UpdateSectionPayload = UpdateTextPayload | UpdateCardPayload | UpdatePokemonsPayload;

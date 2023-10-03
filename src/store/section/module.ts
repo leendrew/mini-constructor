@@ -7,9 +7,15 @@ import type {
   SectionTypes,
   SectionData,
   SectionId,
+  SectionText,
   SectionCards,
+  SectionPokemons,
   AddCardPayload,
   DeleteCardPayload,
+  UpdateSectionPayload,
+  UpdateTextPayload,
+  UpdateCardPayload,
+  UpdatePokemonsPayload,
 } from './types';
 
 export const state: SectionState = {
@@ -86,6 +92,21 @@ export const actions: ActionTree<SectionState, RootState> = {
   deleteCardById({ commit }, payload: DeleteCardPayload) {
     commit('deleteCardById', payload);
   },
+  updateSection({ commit }, payload: UpdateSectionPayload) {
+    switch (payload.sectionType) {
+      case 'text':
+        commit('updateText', payload);
+        break;
+      case 'cards':
+        commit('updateCard', payload);
+        break;
+      case 'pokemons':
+        commit('updatePokemons', payload);
+        break;
+      default:
+        return;
+    }
+  },
 };
 
 export const mutations: MutationTree<SectionState> = {
@@ -105,7 +126,35 @@ export const mutations: MutationTree<SectionState> = {
   deleteCardById(state, payload: DeleteCardPayload) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
-        section.data = (section as SectionCards).data.filter((data) => data.id !== payload.cardId);
+        (section as SectionCards).data = (section as SectionCards).data.filter(
+          (data) => data.id !== payload.cardId,
+        );
+      }
+    });
+  },
+  updateText(state, payload: UpdateTextPayload) {
+    state.sections.forEach((section) => {
+      if (section.id === payload.sectionId) {
+        (section as SectionText).data = { ...payload.data };
+      }
+    });
+  },
+  updateCard(state, payload: UpdateCardPayload) {
+    state.sections.forEach((section) => {
+      if (section.id === payload.sectionId) {
+        section.data = (section as SectionCards).data.map((card) => {
+          if (card.id === payload.data.id) {
+            return { ...payload.data };
+          }
+          return card;
+        });
+      }
+    });
+  },
+  updatePokemons(state, payload: UpdatePokemonsPayload) {
+    state.sections.forEach((section) => {
+      if (section.id === payload.sectionId) {
+        (section as SectionPokemons).data.concat(payload.data);
       }
     });
   },
