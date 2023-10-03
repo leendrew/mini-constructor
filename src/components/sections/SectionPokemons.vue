@@ -25,7 +25,7 @@ export default defineComponent({
   data() {
     return {
       limit: 5,
-      offset: (!!this.data.length && this.data[this.data.length - 1].id) || 0,
+      offset: (this.data.length && this.data[this.data.length - 1].id) || 0,
       searchValue: '',
     };
   },
@@ -42,6 +42,11 @@ export default defineComponent({
         this.offset += this.limit;
       });
     },
+  },
+  beforeUpdate() {
+    if (!!this.data.length) {
+      this.offset = this.data[this.data.length - 1].id;
+    }
   },
 });
 </script>
