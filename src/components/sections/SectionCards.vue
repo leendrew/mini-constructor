@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
+import Draggable from 'vuedraggable';
 import SectionBase from './SectionBase.vue';
 import CardBase from '@/components/CardBase.vue';
 import type { SectionCardsData, GlobalState, SectionCards } from '@/store';
@@ -21,6 +22,12 @@ export default defineComponent({
     return {
       cardsOnEditMod: {} as Record<string, SectionCardsData>,
       newCardId: generateNumberId(),
+      icons: [
+        { text: 'Bookmark', value: 'mdi-bookmark-outline' },
+        { text: 'Alert', value: 'mdi-alert-circle-outline' },
+        { text: 'Bucket', value: 'mdi-bucket-outline' },
+        { text: 'Bullseye', value: 'mdi-bullseye' },
+      ],
     };
   },
   methods: {
@@ -61,13 +68,13 @@ export default defineComponent({
     },
     resetNewCardState() {
       this.newCardId = generateNumberId();
-      this.addCardToEditMod({ id: this.newCardId, title: '', description: '' });
+      this.addCardToEditMod({ id: this.newCardId, icon: '', title: '', description: '' });
     },
     deleteSection() {
       this.$emit('deleteSection');
     },
     checkIsDataEmpty(card: SectionCardsData) {
-      return card.title && card.description;
+      return card.title && card.description && card.icon;
     },
   },
   watch: {
@@ -87,7 +94,8 @@ export default defineComponent({
       <template v-for="card of data">
         <CardBase :key="card.id">
           <template v-if="!checkIsCardOnEditMod(card.id)">
-            <h4 class="ws-pw text-h5">{{ card.title }}</h4>
+            <v-icon class="icon" color="primary">{{ card.icon }}</v-icon>
+            <h4 class="ws-pw text-h5 pr-5">{{ card.title }}</h4>
             <p class="ws-pw text-body-1 mb-0 flex-grow-1">{{ card.description }}</p>
             <template v-if="isOnEditMod">
               <Stack :gap="3">
@@ -105,6 +113,21 @@ export default defineComponent({
             </template>
           </template>
           <template v-else>
+            <v-select
+              label="Icon"
+              outlined
+              hide-details
+              :items="icons"
+              :prepend-inner-icon="cardsOnEditMod[card.id].icon"
+              v-model="cardsOnEditMod[card.id].icon"
+            >
+              <template v-slot:item="{ item, props }">
+                <Stack :gap="3">
+                  <v-icon color="primary" v-bind="props">{{ item.value }} </v-icon>
+                  {{ item.text }}
+                </Stack>
+              </template>
+            </v-select>
             <v-text-field
               label="Title"
               v-model.trim="cardsOnEditMod[card.id].title"
@@ -134,6 +157,21 @@ export default defineComponent({
       </template>
       <template v-if="isOnEditMod">
         <CardBase>
+          <v-select
+            label="Icon"
+            outlined
+            hide-details
+            v-model="cardsOnEditMod[newCardId].icon"
+            :items="icons"
+            :prepend-inner-icon="cardsOnEditMod[newCardId].icon"
+          >
+            <template v-slot:item="{ item, props }">
+              <Stack :gap="3">
+                <v-icon color="primary" v-bind="props">{{ item.value }} </v-icon>
+                {{ item.text }}
+              </Stack>
+            </template>
+          </v-select>
           <v-text-field
             label="Title"
             v-model.trim="cardsOnEditMod[newCardId].title"
@@ -174,5 +212,10 @@ export default defineComponent({
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
   gap: 16px;
+}
+.icon {
+  position: absolute;
+  right: 8px;
+  top: 8px;
 }
 </style>

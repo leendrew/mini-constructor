@@ -11,6 +11,7 @@ export interface SectionText {
 
 export interface SectionCardsData {
   id: number;
+  icon: string;
   title: string;
   description: string;
 }

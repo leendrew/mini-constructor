@@ -20,37 +20,7 @@ import type {
 } from './types';
 
 export const state: SectionState = {
-  sections: [
-    {
-      id: 0,
-      type: 'text',
-      data: {
-        title: 'Title',
-        description: 'description',
-      },
-    },
-    {
-      id: 1,
-      type: 'cards',
-      data: [
-        {
-          id: 0,
-          title: 'card 1',
-          description: 'description of card 1',
-        },
-        {
-          id: 1,
-          title: 'card 2',
-          description: 'description of card 2',
-        },
-      ],
-    },
-    {
-      id: 4,
-      type: 'pokemons',
-      data: [],
-    },
-  ],
+  sections: [],
 };
 
 export const getters: GetterTree<SectionState, RootState> = {};
@@ -59,7 +29,14 @@ export const actions: ActionTree<SectionState, RootState> = {
   async addNewSection({ commit }, sectionType: SectionTypes) {
     const sectionDataMap: Record<SectionTypes, SectionData> = {
       text: { title: 'Sample Title', description: 'Sample Description' },
-      cards: [{ id: 0, title: 'Sample Card Title', description: 'Sample Card Description' }],
+      cards: [
+        {
+          id: 0,
+          icon: 'mdi-bookmark-outline',
+          title: 'Sample Card Title',
+          description: 'Sample Card Description',
+        },
+      ],
       pokemons: [],
     };
     const newSectionId = generateNumberId();

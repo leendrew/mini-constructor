@@ -7,7 +7,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-sheet class="pa-4" rounded outlined tag="article">
+  <v-sheet class="pa-4 card" rounded outlined tag="article">
     <Stack class="card-inner" direction="column" :gap="4">
       <slot />
     </Stack>
@@ -15,6 +15,9 @@ export default defineComponent({
 </template>
 
 <style scoped>
+.card {
+  position: relative;
+}
 .card-inner {
   height: 100%;
 }
