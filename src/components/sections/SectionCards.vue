@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import SectionBase from './SectionBase.vue';
+import CardBase from '@/components/CardBase.vue';
 import type { SectionCardsData, GlobalState, SectionCards } from '@/store';
 import { generateNumberId } from '@/utils';
 export default defineComponent({
@@ -84,92 +85,80 @@ export default defineComponent({
   <SectionBase>
     <div class="grid">
       <template v-for="card of data">
-        <v-card :key="card.id" class="d-flex flex-column" rounded outlined tag="article">
+        <CardBase :key="card.id">
           <template v-if="!checkIsCardOnEditMod(card.id)">
-            <v-card-title>{{ card.title }}</v-card-title>
-            <v-card-text> {{ card.description }}</v-card-text>
+            <h4 class="ws-pw text-h5">{{ card.title }}</h4>
+            <p class="ws-pw text-body-1 mb-0 flex-grow-1">{{ card.description }}</p>
+            <template v-if="isOnEditMod">
+              <Stack :gap="3">
+                <v-btn color="amber" text outlined @click="addCardToEditMod(card)">Edit</v-btn>
+                <v-btn
+                  color="red"
+                  text
+                  outlined
+                  @click="deleteCard(card.id)"
+                  :disabled="data.length === 1"
+                >
+                  Delete
+                </v-btn>
+              </Stack>
+            </template>
           </template>
           <template v-else>
-            <v-card-title>
-              <v-text-field
-                label="Title"
-                v-model="cardsOnEditMod[card.id].title"
-                outlined
-                hide-details
-              />
-              <v-textarea
-                class="mt-4"
-                label="Description"
-                v-model="cardsOnEditMod[card.id].description"
-                outlined
-                auto-grow
-                rows="3"
-                hide-details
-              />
-            </v-card-title>
-          </template>
-          <template v-if="isOnEditMod && !checkIsCardOnEditMod(card.id)">
-            <v-card-actions class="mt-auto">
-              <v-btn color="amber" text outlined @click="addCardToEditMod(card)">Edit</v-btn>
-              <v-btn
-                color="red"
-                text
-                outlined
-                @click="deleteCard(card.id)"
-                :disabled="data.length === 1"
-              >
-                Delete
-              </v-btn>
-            </v-card-actions>
-          </template>
-          <template v-else-if="isOnEditMod && checkIsCardOnEditMod(card.id)">
-            <v-card-actions class="mt-auto">
-              <v-btn
-                color="primary"
-                text
-                outlined
-                block
-                @click="updateCard(cardsOnEditMod[card.id])"
-                :disabled="!checkIsDataEmpty(cardsOnEditMod[card.id])"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </template>
-        </v-card>
-      </template>
-      <template v-if="isOnEditMod">
-        <v-card class="d-flex flex-column" rounded outlined tag="article">
-          <v-card-title>
             <v-text-field
               label="Title"
-              v-model="cardsOnEditMod[newCardId].title"
+              v-model.trim="cardsOnEditMod[card.id].title"
               outlined
               hide-details
             />
             <v-textarea
-              class="mt-4"
+              class="flex-grow-1"
               label="Description"
-              v-model="cardsOnEditMod[newCardId].description"
+              v-model.trim="cardsOnEditMod[card.id].description"
               outlined
               auto-grow
               rows="3"
               hide-details
             />
-          </v-card-title>
-          <v-card-actions class="mt-auto">
             <v-btn
               color="primary"
               text
               outlined
-              block
-              @click="addCard(cardsOnEditMod[newCardId])"
-              :disabled="!checkIsDataEmpty(cardsOnEditMod[newCardId])"
+              @click="updateCard(cardsOnEditMod[card.id])"
+              :disabled="!checkIsDataEmpty(cardsOnEditMod[card.id])"
             >
-              Add New Card
+              Save
             </v-btn>
-          </v-card-actions>
-        </v-card>
+          </template>
+        </CardBase>
+      </template>
+      <template v-if="isOnEditMod">
+        <CardBase>
+          <v-text-field
+            label="Title"
+            v-model.trim="cardsOnEditMod[newCardId].title"
+            outlined
+            hide-details
+          />
+          <v-textarea
+            class="flex-grow-1"
+            label="Description"
+            v-model.trim="cardsOnEditMod[newCardId].description"
+            outlined
+            auto-grow
+            rows="3"
+            hide-details
+          />
+          <v-btn
+            color="primary"
+            text
+            outlined
+            @click="addCard(cardsOnEditMod[newCardId])"
+            :disabled="!checkIsDataEmpty(cardsOnEditMod[newCardId])"
+          >
+            Add New Card
+          </v-btn>
+        </CardBase>
       </template>
     </div>
     <template v-if="isOnEditMod">

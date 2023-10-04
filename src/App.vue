@@ -20,7 +20,11 @@ html {
   overflow-y: auto;
 }
 
-.w-fc {
-  width: fit-content;
+.ws-pw {
+  white-space: pre-wrap;
+}
+
+.v-input {
+  flex-grow: 0;
 }
 </style>

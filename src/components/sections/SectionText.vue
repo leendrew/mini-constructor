@@ -56,38 +56,36 @@ export default defineComponent({
 <template>
   <SectionBase>
     <template v-if="!isOnLocalEditMod">
-      <h4 class="text-h4">{{ data.title }}</h4>
-      <p class="text-body-1 mb-0">{{ data.description }}</p>
+      <h4 class="ws-pw text-h4">{{ data.title }}</h4>
+      <p class="ws-pw text-body-1 mb-0">{{ data.description }}</p>
+      <template v-if="isOnEditMod">
+        <v-btn class="align-self-start" color="amber" text outlined @click="toggleLocalEditMod">
+          Edit
+        </v-btn>
+      </template>
     </template>
     <template v-else>
-      <v-text-field label="Title" v-model="title" outlined hide-details />
+      <v-text-field label="Title" v-model.trim="title" outlined hide-details />
       <v-textarea
         label="Description"
-        v-model="description"
+        v-model.trim="description"
         outlined
         hide-details
         auto-grow
         rows="3"
       />
+      <v-btn
+        class="align-self-start"
+        color="primary"
+        text
+        outlined
+        @click="updateData"
+        :disabled="!checkIsEmpty()"
+      >
+        Save
+      </v-btn>
     </template>
     <template v-if="isOnEditMod">
-      <template v-if="!isOnLocalEditMod">
-        <v-btn class="align-self-start" color="amber" text outlined @click="toggleLocalEditMod">
-          Edit
-        </v-btn>
-      </template>
-      <template v-else>
-        <v-btn
-          class="align-self-start"
-          color="primary"
-          text
-          outlined
-          @click="updateData"
-          :disabled="!checkIsEmpty()"
-        >
-          Save
-        </v-btn>
-      </template>
       <v-btn class="align-self-start" color="red" text outlined @click="deleteSection">
         Delete Section
       </v-btn>

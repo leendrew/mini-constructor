@@ -4,6 +4,7 @@ import SectionBase from './SectionBase.vue';
 import { pokemonsApi } from '@/api';
 import type { SectionPokemonsData, GlobalState, SectionPokemons } from '@/store';
 import { fetchPokemons } from '@/api/pokemons';
+import CardBase from '../CardBase.vue';
 export default defineComponent({
   name: 'SectionPokemons',
   props: {
@@ -54,32 +55,29 @@ export default defineComponent({
 <template>
   <SectionBase>
     <v-text-field
-      class="w-fc align-self-center"
+      class="align-self-center"
       outlined
       label="Name"
       placeholder="Filter by name..."
       hide-details
-      v-model="searchValue"
+      clearable
+      v-model.trim="searchValue"
     />
     <template v-if="!!filteredPokemons.length">
       <div class="grid">
         <template v-for="pokemon of filteredPokemons">
-          <v-card :key="pokemon.id" class="d-flex flex-column" rounded outlined tag="article">
+          <CardBase :key="pokemon.id">
             <v-img :src="pokemon.imageUrl" />
-            <v-card-title>{{ pokemon.name }}</v-card-title>
+            <h4 class="text-h5">{{ pokemon.name }}</h4>
             <template v-if="isOnEditMod">
-              <v-card-actions class="mt-auto">
-                <v-btn color="red" text outlined block @click="deletePokemon(pokemon.id)">
-                  Delete
-                </v-btn>
-              </v-card-actions>
+              <v-btn color="red" text outlined @click="deletePokemon(pokemon.id)">Delete</v-btn>
             </template>
-          </v-card>
+          </CardBase>
         </template>
       </div>
     </template>
     <template v-else-if="!!data.length">
-      <p class="text-h5 text-center">No match results :(</p>
+      <p class="text-h5 text-center">No search matches :(</p>
     </template>
     <template v-if="isOnEditMod">
       <v-btn class="align-self-start" color="primary" text outlined @click="fetchPokemons">
