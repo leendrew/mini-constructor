@@ -7,6 +7,9 @@ import type { SectionCardsData, GlobalState, SectionCards } from '@/store';
 import { generateNumberId } from '@/utils';
 export default defineComponent({
   name: 'SectionCards',
+  components: {
+    Draggable,
+  },
   props: {
     data: {
       type: Array as PropType<SectionCardsData[]>,
@@ -76,6 +79,9 @@ export default defineComponent({
     checkIsDataEmpty(card: SectionCardsData) {
       return card.title && card.description && card.icon;
     },
+    isDragAllowed() {
+      return this.isOnEditMod && this.data.length !== 1;
+    },
   },
   watch: {
     isOnEditMod() {
@@ -90,9 +96,27 @@ export default defineComponent({
 
 <template>
   <SectionBase>
-    <div class="grid">
+    <template v-if="isOnEditMod">
+      <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
+    </template>
+    <Draggable
+      class="grid"
+      tag="div"
+      group="cards"
+      ghostClass="ghost"
+      draggable=".draggable"
+      handle=".handle"
+      :forceFallback="true"
+      :scrollSensitivity="200"
+      :list="data"
+      :disabled="!isOnEditMod"
+      :move="isDragAllowed"
+    >
       <template v-for="card of data">
-        <CardBase :key="card.id">
+        <CardBase :class="{ draggable: isOnEditMod && data.length !== 1 }" :key="card.id">
+          <template v-if="isOnEditMod && data.length !== 1">
+            <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
+          </template>
           <template v-if="!checkIsCardOnEditMod(card.id)">
             <v-icon class="icon" color="primary">{{ card.icon }}</v-icon>
             <h4 class="ws-pw text-h5 pr-5">{{ card.title }}</h4>
@@ -198,7 +222,7 @@ export default defineComponent({
           </v-btn>
         </CardBase>
       </template>
-    </div>
+    </Draggable>
     <template v-if="isOnEditMod">
       <v-btn class="align-self-start" color="red" text outlined @click="deleteSection">
         Delete Section

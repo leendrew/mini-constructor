@@ -27,4 +27,13 @@ html {
 .v-input {
   flex-grow: 0;
 }
+
+.handle {
+  cursor: grab;
+}
+
+.ghost {
+  opacity: 0.3;
+  outline: 2px dashed #000000;
+}
 </style>

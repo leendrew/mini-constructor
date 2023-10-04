@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
+import Draggable from 'vuedraggable';
 import SectionBase from './SectionBase.vue';
 import { pokemonsApi } from '@/api';
 import type { SectionPokemonsData, GlobalState, SectionPokemons } from '@/store';
@@ -7,6 +8,9 @@ import { fetchPokemons } from '@/api/pokemons';
 import CardBase from '../CardBase.vue';
 export default defineComponent({
   name: 'SectionPokemons',
+  components: {
+    Draggable,
+  },
   props: {
     data: {
       type: Array as PropType<SectionPokemonsData[]>,
@@ -43,6 +47,9 @@ export default defineComponent({
         this.offset += this.limit;
       });
     },
+    isDragAllowed() {
+      return this.isOnEditMod && this.filteredPokemons.length === this.data.length;
+    },
   },
   beforeUpdate() {
     if (!!this.data.length) {
@@ -54,6 +61,9 @@ export default defineComponent({
 
 <template>
   <SectionBase>
+    <template v-if="isOnEditMod">
+      <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
+    </template>
     <v-text-field
       class="align-self-center"
       outlined
@@ -64,9 +74,27 @@ export default defineComponent({
       v-model.trim="searchValue"
     />
     <template v-if="!!filteredPokemons.length">
-      <div class="grid">
+      <Draggable
+        class="grid"
+        tag="div"
+        group="pokemons"
+        ghostClass="ghost"
+        draggable=".draggable"
+        handle=".handle"
+        :forceFallback="true"
+        :scrollSensitivity="200"
+        :list="data"
+        :disabled="!isOnEditMod"
+        :move="isDragAllowed"
+      >
         <template v-for="pokemon of filteredPokemons">
-          <CardBase :key="pokemon.id">
+          <CardBase
+            :class="{ draggable: isOnEditMod && filteredPokemons.length === data.length }"
+            :key="pokemon.id"
+          >
+            <template v-if="isOnEditMod && filteredPokemons.length === data.length">
+              <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
+            </template>
             <v-img :src="pokemon.imageUrl" />
             <h4 class="text-h5">{{ pokemon.name }}</h4>
             <template v-if="isOnEditMod">
@@ -74,7 +102,7 @@ export default defineComponent({
             </template>
           </CardBase>
         </template>
-      </div>
+      </Draggable>
     </template>
     <template v-else-if="!!data.length">
       <p class="text-h5 text-center">No search matches :(</p>

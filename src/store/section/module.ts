@@ -80,6 +80,9 @@ export const actions: ActionTree<SectionState, RootState> = {
         return;
     }
   },
+  updateAllSections({ commit }, payload) {
+    commit('setSections', payload);
+  },
 };
 
 export const mutations: MutationTree<SectionState> = {
@@ -129,5 +132,8 @@ export const mutations: MutationTree<SectionState> = {
         (section as SectionPokemons).data.push(...payload.data);
       }
     });
+  },
+  setSections(state, payload) {
+    state.sections = [...payload];
   },
 };

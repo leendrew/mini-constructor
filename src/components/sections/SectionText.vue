@@ -55,6 +55,9 @@ export default defineComponent({
 
 <template>
   <SectionBase>
+    <template v-if="isOnEditMod">
+      <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
+    </template>
     <template v-if="!isOnLocalEditMod">
       <h4 class="ws-pw text-h4">{{ data.title }}</h4>
       <p class="ws-pw text-body-1 mb-0">{{ data.description }}</p>
