@@ -8,9 +8,10 @@ Simple page builder of 3 types of sections:
 
 ## Features
 
+- Switch between view and edit modes;
 - Add new Section;
-- Switch between view and edit mod;
 - Delete Section;
+- Save Sections to local storage;
 - Text Section:
   - On edit mod change title or description.
 - Cards Section:
