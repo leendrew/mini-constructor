@@ -57,10 +57,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <SectionBase>
-    <template v-if="isOnEditMod && sectionsLength > 1">
-      <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
-    </template>
+  <SectionBase @deleteSection="deleteSection">
     <template v-if="!isOnLocalEditMod">
       <h4 class="ws-pw text-h4">{{ data.title }}</h4>
       <p class="ws-pw text-body-1 mb-0">{{ data.description }}</p>
@@ -89,11 +86,6 @@ export default defineComponent({
         :disabled="!checkIsEmpty()"
       >
         Save
-      </v-btn>
-    </template>
-    <template v-if="isOnEditMod">
-      <v-btn class="align-self-start" color="red" text outlined @click="deleteSection">
-        Delete Section
       </v-btn>
     </template>
   </SectionBase>

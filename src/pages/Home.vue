@@ -148,7 +148,7 @@ export default defineComponent({
         </Draggable>
       </template>
       <template v-else-if="!isOnEditMod">
-        <SectionBase>
+        <SectionBase withoutDelete>
           <p class="text-h5 text-center">
             This page is empty :( Turn on Edit mod and add sections (they will be saved after
             refresh page)
@@ -156,7 +156,7 @@ export default defineComponent({
         </SectionBase>
       </template>
       <template v-if="isOnEditMod">
-        <SectionBase>
+        <SectionBase withoutDelete>
           <v-select
             class="align-self-center"
             label="Section Type"

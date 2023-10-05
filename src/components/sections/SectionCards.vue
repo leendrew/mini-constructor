@@ -110,10 +110,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <SectionBase>
-    <template v-if="isOnEditMod && sectionsLength > 1">
-      <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
-    </template>
+  <SectionBase @deleteSection="deleteSection">
     <Draggable
       class="grid"
       tag="div"
@@ -231,11 +228,6 @@ export default defineComponent({
         </CardBase>
       </template>
     </Draggable>
-    <template v-if="isOnEditMod">
-      <v-btn class="align-self-start" color="red" text outlined @click="deleteSection">
-        Delete Section
-      </v-btn>
-    </template>
   </SectionBase>
 </template>
 
