@@ -41,5 +41,3 @@ export default defineComponent({
     <slot />
   </div>
 </template>
-
-<style scoped></style>

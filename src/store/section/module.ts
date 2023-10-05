@@ -16,7 +16,9 @@ import type {
   UpdateSectionPayload,
   UpdateTextPayload,
   UpdateCardPayload,
+  UpdateAllCardsPayload,
   UpdatePokemonsPayload,
+  UpdateAllPokemonsPayload,
 } from './types';
 
 export const state: SectionState = {
@@ -31,7 +33,7 @@ export const actions: ActionTree<SectionState, RootState> = {
       text: { title: 'Sample Title', description: 'Sample Description' },
       cards: [
         {
-          id: 0,
+          id: generateNumberId(),
           icon: 'mdi-bookmark-outline',
           title: 'Sample Card Title',
           description: 'Sample Card Description',
@@ -80,12 +82,21 @@ export const actions: ActionTree<SectionState, RootState> = {
         return;
     }
   },
-  updateAllSections({ commit }, payload) {
+  updateAllSections({ commit }, payload: Section[]) {
     commit('setSections', payload);
+  },
+  updateAllCards({ commit }, payload: UpdateAllCardsPayload) {
+    commit('setCards', payload);
+  },
+  updateAllPokemons({ commit }, payload: UpdateAllPokemonsPayload) {
+    commit('setPokemons', payload);
   },
 };
 
 export const mutations: MutationTree<SectionState> = {
+  setSections(state, payload: Section[]) {
+    state.sections = [...payload];
+  },
   addSection(state, newSection: Section) {
     state.sections.push({ ...newSection });
   },
@@ -126,6 +137,13 @@ export const mutations: MutationTree<SectionState> = {
       }
     });
   },
+  setCards(state, payload: UpdateAllCardsPayload) {
+    state.sections.forEach((section) => {
+      if (section.id === payload.sectionId) {
+        section.data = [...payload.data];
+      }
+    });
+  },
   updatePokemons(state, payload: UpdatePokemonsPayload) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
@@ -133,7 +151,11 @@ export const mutations: MutationTree<SectionState> = {
       }
     });
   },
-  setSections(state, payload) {
-    state.sections = [...payload];
+  setPokemons(state, payload: UpdateAllPokemonsPayload) {
+    state.sections.forEach((section) => {
+      if (section.id === payload.sectionId) {
+        section.data = [...payload.data];
+      }
+    });
   },
 };

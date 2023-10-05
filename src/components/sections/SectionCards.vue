@@ -3,7 +3,7 @@ import { defineComponent, type PropType } from 'vue';
 import Draggable from 'vuedraggable';
 import SectionBase from './SectionBase.vue';
 import CardBase from '@/components/CardBase.vue';
-import type { SectionCardsData, GlobalState, SectionCards } from '@/store';
+import type { SectionCardsData, GlobalState, SectionCards, ChangeDnDEvent } from '@/store';
 import { generateNumberId } from '@/utils';
 export default defineComponent({
   name: 'SectionCards',
@@ -52,7 +52,8 @@ export default defineComponent({
       this.$emit('updateCardById', card);
     },
     deleteCard(id: SectionCards['id']) {
-      if (this.data.length === 1) {
+      if (this.data.length === 0) {
+        this.deleteSection();
         return;
       }
       this.$emit('deleteCardById', id);
@@ -80,7 +81,18 @@ export default defineComponent({
       return card.title && card.description && card.icon;
     },
     isDragAllowed() {
-      return this.isOnEditMod && this.data.length !== 1;
+      return this.isOnEditMod;
+    },
+    onChange(e: ChangeDnDEvent<SectionCardsData>) {
+      if ('removed' in e) {
+        const data = e.removed;
+        this.deleteCard(data.element.id);
+        return;
+      }
+      if ('moved' in e) {
+        this.$emit('updateAllCards', this.data);
+        return;
+      }
     },
   },
   watch: {
@@ -110,11 +122,12 @@ export default defineComponent({
       :scrollSensitivity="200"
       :list="data"
       :disabled="!isOnEditMod"
-      :move="isDragAllowed"
+      @move="isDragAllowed"
+      @change="onChange"
     >
       <template v-for="card of data">
-        <CardBase :class="{ draggable: isOnEditMod && data.length !== 1 }" :key="card.id">
-          <template v-if="isOnEditMod && data.length !== 1">
+        <CardBase :class="{ draggable: isOnEditMod }" :key="card.id">
+          <template v-if="isOnEditMod">
             <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
           </template>
           <template v-if="!checkIsCardOnEditMod(card.id)">
@@ -124,15 +137,7 @@ export default defineComponent({
             <template v-if="isOnEditMod">
               <Stack :gap="3">
                 <v-btn color="amber" text outlined @click="addCardToEditMod(card)">Edit</v-btn>
-                <v-btn
-                  color="red"
-                  text
-                  outlined
-                  @click="deleteCard(card.id)"
-                  :disabled="data.length === 1"
-                >
-                  Delete
-                </v-btn>
+                <v-btn color="red" text outlined @click="deleteCard(card.id)"> Delete </v-btn>
               </Stack>
             </template>
           </template>

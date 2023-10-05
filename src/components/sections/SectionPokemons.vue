@@ -3,7 +3,7 @@ import { defineComponent, type PropType } from 'vue';
 import Draggable from 'vuedraggable';
 import SectionBase from './SectionBase.vue';
 import { pokemonsApi } from '@/api';
-import type { SectionPokemonsData, GlobalState, SectionPokemons } from '@/store';
+import type { SectionPokemonsData, GlobalState, SectionPokemons, ChangeDnDEvent } from '@/store';
 import { fetchPokemons } from '@/api/pokemons';
 import CardBase from '../CardBase.vue';
 export default defineComponent({
@@ -50,6 +50,17 @@ export default defineComponent({
     isDragAllowed() {
       return this.isOnEditMod && this.filteredPokemons.length === this.data.length;
     },
+    onChange(e: ChangeDnDEvent<SectionPokemons>) {
+      if ('removed' in e) {
+        const data = e.removed;
+        this.deletePokemon(data.element.id);
+        return;
+      }
+      if ('moved' in e) {
+        this.$emit('updateAllPokemons', this.data);
+        return;
+      }
+    },
   },
   beforeUpdate() {
     if (!!this.data.length) {
@@ -85,7 +96,8 @@ export default defineComponent({
         :scrollSensitivity="200"
         :list="data"
         :disabled="!isOnEditMod"
-        :move="isDragAllowed"
+        @move="isDragAllowed"
+        @change="onChange"
       >
         <template v-for="pokemon of filteredPokemons">
           <CardBase

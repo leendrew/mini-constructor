@@ -20,6 +20,12 @@ html {
   overflow-y: auto;
 }
 
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .ws-pw {
   white-space: pre-wrap;
 }

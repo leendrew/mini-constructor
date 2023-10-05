@@ -13,6 +13,7 @@ import type {
   AddCardPayload,
   DeleteDataPayload,
   UpdateSectionPayload,
+  UpdateAllPokemonsPayload,
 } from '@/store';
 export default defineComponent({
   name: 'Home',
@@ -55,11 +56,17 @@ export default defineComponent({
     addCard(payload: AddCardPayload) {
       this.$store.dispatch('addCard', payload);
     },
+    updateAllCards(payload: any) {
+      this.$store.dispatch('updateAllCards', payload);
+    },
     deleteDataById(payload: DeleteDataPayload) {
       this.$store.dispatch('deleteDataById', payload);
     },
     updateSection(payload: UpdateSectionPayload) {
       this.$store.dispatch('updateSection', payload);
+    },
+    updateAllPokemons(payload: UpdateAllPokemonsPayload) {
+      this.$store.dispatch('updateAllPokemons', payload);
     },
     isDragAllowed() {
       return this.isOnEditMod && this.sections.length !== 1;
@@ -114,6 +121,7 @@ export default defineComponent({
                     data: card,
                   })
               "
+              @updateAllCards="(cards) => updateAllCards({ sectionId: section.id, data: cards })"
             />
             <SectionPokemons
               v-else-if="section.type === 'pokemons'"
@@ -131,6 +139,9 @@ export default defineComponent({
                     sectionType: section.type,
                     data: pokemons,
                   })
+              "
+              @updateAllPokemons="
+                (pokemons) => updateAllPokemons({ sectionId: section.id, data: pokemons })
               "
             />
           </template>
@@ -169,11 +180,3 @@ export default defineComponent({
     </Stack>
   </v-container>
 </template>
-
-<style scoped>
-.stack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-</style>

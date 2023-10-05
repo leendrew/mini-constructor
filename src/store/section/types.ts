@@ -68,10 +68,46 @@ export interface UpdateCardPayload {
   data: SectionCardsData;
 }
 
+export interface UpdateAllCardsPayload {
+  sectionId: SectionId;
+  data: SectionCards['data'];
+}
+
 export interface UpdatePokemonsPayload {
   sectionId: SectionId;
   sectionType: SectionPokemons['type'];
-  data: SectionPokemonsData[];
+  data: SectionPokemons['data'];
+}
+
+export interface UpdateAllPokemonsPayload {
+  sectionId: SectionId;
+  data: SectionPokemons['data'];
 }
 
 export type UpdateSectionPayload = UpdateTextPayload | UpdateCardPayload | UpdatePokemonsPayload;
+
+// DND Specific
+
+interface AddDnDEvent<T> {
+  added: {
+    element: T;
+    newIndex: number;
+  };
+}
+
+interface RemoveDnDEvent<T> {
+  removed: {
+    element: T;
+    oldIndex: number;
+  };
+}
+
+interface MoveDnDEvent<T> {
+  moved: {
+    element: T;
+    oldIndex: number;
+    newIndex: number;
+  };
+}
+
+export type ChangeDnDEvent<T> = AddDnDEvent<T> | RemoveDnDEvent<T> | MoveDnDEvent<T>;

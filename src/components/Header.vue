@@ -29,5 +29,3 @@ export default defineComponent({
     </v-container>
   </v-app-bar>
 </template>
-
-<style scoped></style>
