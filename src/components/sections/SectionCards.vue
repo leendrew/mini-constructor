@@ -20,6 +20,9 @@ export default defineComponent({
     isOnEditMod() {
       return (this.$store.state.global as GlobalState).isOnEditMod;
     },
+    sectionsLength() {
+      return this.$store.getters.sectionsLength;
+    },
   },
   data() {
     return {
@@ -108,7 +111,7 @@ export default defineComponent({
 
 <template>
   <SectionBase>
-    <template v-if="isOnEditMod">
+    <template v-if="isOnEditMod && sectionsLength > 1">
       <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
     </template>
     <Draggable

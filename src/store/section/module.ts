@@ -25,7 +25,9 @@ export const state: SectionState = {
   sections: [],
 };
 
-export const getters: GetterTree<SectionState, RootState> = {};
+export const getters: GetterTree<SectionState, RootState> = {
+  sectionsLength: (state) => state.sections.length,
+};
 
 export const actions: ActionTree<SectionState, RootState> = {
   async addNewSection({ commit }, sectionType: SectionTypes) {

@@ -26,6 +26,9 @@ export default defineComponent({
         ? this.data.filter((pokemon) => pokemon.name.includes(this.searchValue))
         : this.data;
     },
+    sectionsLength() {
+      return this.$store.getters.sectionsLength;
+    },
   },
   data() {
     return {
@@ -72,7 +75,7 @@ export default defineComponent({
 
 <template>
   <SectionBase>
-    <template v-if="isOnEditMod">
+    <template v-if="isOnEditMod && sectionsLength > 1">
       <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
     </template>
     <v-text-field
