@@ -64,7 +64,7 @@ export default defineComponent({
   },
   beforeUpdate() {
     if (!!this.data.length) {
-      this.offset = this.data[this.data.length - 1].id;
+      this.offset = Math.max(...this.data.map((pokemon) => pokemon.id));
     }
   },
 });
