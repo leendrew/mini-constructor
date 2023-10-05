@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   // @ts-expect-error
   import.meta.env = { ...import.meta.env, ...loadEnv(mode, './') };
   return {
+    base: './',
     plugins: [vue2(), Components({ resolvers: [VuetifyResolver()] })],
     resolve: {
       alias: {
@@ -15,6 +16,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
+      // @ts-expect-error
       port: parseInt(import.meta.env.VITE_PORT || '3000', 10),
     },
   };

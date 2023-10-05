@@ -5,7 +5,7 @@ import Home from './pages/Home.vue';
 Vue.use(VueRouter);
 
 export const router = new VueRouter({
-  mode: 'history',
+  mode: import.meta.env.PROD ? 'hash' : 'history',
   base: import.meta.env.BASE_URL,
   routes: [
     {
