@@ -8,18 +8,23 @@ Simple page builder of 3 types of sections:
 
 ## Features
 
-- Switch between view and edit modes;
+- Switch between View and Edit modes;
 - Add new Section;
 - Delete Section;
-- Save Sections to local storage;
+- Synchronize Sections state to local storage;
 - Text Section:
-  - On edit mod change title or description.
+  - On Edit mode:
+    - Change title or description.
 - Cards Section:
-  - On edit mod change icon, title or description of each card;
-  - On edit mod delete card.
+  - On Edit mode:
+    - Change icon, title or description of each card;
+    - Delete card;
+    - Move cards between each other and other cards sections.
 - Pokemons Section:
-  - Load 5 more pokemons;
-  - Filter them by name using text input.
+  - On Edit mode:
+    - Load 5 more pokemons;
+    - Filter them by name using text input;
+    - Move cards between each other and other cards sections.
 
 ## Stack
 
@@ -28,3 +33,4 @@ Simple page builder of 3 types of sections:
 - Vite
 - Vuex
 - Vuetify
+- Vuedraggable
