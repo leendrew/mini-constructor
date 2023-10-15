@@ -21,6 +21,9 @@ export default defineComponent({
     isOnEditMod() {
       return (this.$store.state.global as GlobalState).isOnEditMod;
     },
+    sectionsLength() {
+      return this.$store.getters.sectionsLength;
+    },
     filteredPokemons(): SectionPokemonsData[] {
       return !!this.data.length && this.searchValue
         ? this.data.filter((pokemon) => pokemon.name.includes(this.searchValue))
@@ -39,11 +42,15 @@ export default defineComponent({
       this.$emit('deleteSection');
     },
     deletePokemon(id: SectionPokemons['id']) {
-      this.$emit('deletePokemonById', id);
+      if (this.data.length === 1) {
+        this.deleteSection();
+        return;
+      }
+      this.$emit('deleteDataById', id);
     },
     fetchPokemons() {
       pokemonsApi.fetchPokemons(this.limit, this.offset).then((res) => {
-        this.$emit('updateData', res);
+        this.$emit('addData', res);
         this.offset += this.limit;
       });
     },
@@ -57,7 +64,7 @@ export default defineComponent({
         return;
       }
       if ('moved' in e) {
-        this.$emit('updateAllPokemons', this.data);
+        this.$emit('updateData', this.data);
         return;
       }
     },
@@ -71,7 +78,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <SectionBase @deleteSection="deleteSection">
+  <SectionBase
+    @deleteSection="deleteSection"
+    :hideHandle="!isOnEditMod || sectionsLength <= 1"
+    :hideAction="!isOnEditMod"
+  >
     <v-text-field
       class="align-self-center"
       outlined
@@ -107,7 +118,7 @@ export default defineComponent({
             <v-img :src="pokemon.imageUrl" />
             <h4 class="text-h5">{{ pokemon.name }}</h4>
             <template v-if="isOnEditMod">
-              <v-btn color="red" text outlined @click="deletePokemon(pokemon.id)">Delete</v-btn>
+              <v-btn color="red" text outlined @click="deletePokemon(pokemon.id)"> Delete </v-btn>
             </template>
           </CardBase>
         </template>

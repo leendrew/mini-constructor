@@ -8,17 +8,12 @@ import type {
   SectionTypes,
   SectionData,
   SectionId,
-  SectionText,
-  SectionCards,
-  SectionPokemons,
-  AddCardPayload,
   DeleteDataPayload,
-  UpdateSectionPayload,
-  UpdateTextPayload,
-  UpdateCardPayload,
-  UpdateAllCardsPayload,
-  UpdatePokemonsPayload,
-  UpdateAllPokemonsPayload,
+  AddDataPayload,
+  UpdateDataPayload,
+  UpdateObjectData,
+  UpdateSingleArrayData,
+  UpdateAllArrayData,
 } from './types';
 
 export const state: SectionState = {
@@ -63,35 +58,41 @@ export const actions: ActionTree<SectionState, RootState> = {
   deleteSectionById({ commit }, sectionId: SectionId) {
     commit('deleteById', sectionId);
   },
-  addCard({ commit }, payload: AddCardPayload) {
-    commit('addCard', payload);
-  },
   deleteDataById({ commit }, payload: DeleteDataPayload) {
     commit('deleteDataById', payload);
   },
-  updateSection({ commit }, payload: UpdateSectionPayload) {
+  addData({ commit }, payload: AddDataPayload) {
     switch (payload.sectionType) {
-      case 'text':
-        commit('updateText', payload);
-        break;
       case 'cards':
-        commit('updateCard', payload);
+        commit('setData', payload);
         break;
       case 'pokemons':
-        commit('updatePokemons', payload);
+        commit('setData', payload);
         break;
-      default:
-        return;
     }
   },
-  updateAllSections({ commit }, payload: Section[]) {
-    commit('setSections', payload);
-  },
-  updateAllCards({ commit }, payload: UpdateAllCardsPayload) {
-    commit('setCards', payload);
-  },
-  updateAllPokemons({ commit }, payload: UpdateAllPokemonsPayload) {
-    commit('setPokemons', payload);
+  updateData({ commit }, payload: UpdateDataPayload) {
+    switch (payload.sectionType) {
+      case 'text':
+        commit('updateObjectData', payload);
+        break;
+      case 'cards':
+        if (Array.isArray(payload.data)) {
+          commit('updateAllArrayData', payload);
+        } else {
+          commit('updateSingleArrayData', payload);
+        }
+        break;
+      case 'pokemons':
+        if (Array.isArray(payload.data)) {
+          commit('updateAllArrayData', payload);
+        } else {
+          commit('updateSingleArrayData', payload);
+        }
+        break;
+      default:
+        break;
+    }
   },
 };
 
@@ -105,13 +106,6 @@ export const mutations: MutationTree<SectionState> = {
   deleteById(state, sectionId: SectionId) {
     state.sections = state.sections.filter((section) => section.id !== sectionId);
   },
-  addCard(state, payload: AddCardPayload) {
-    state.sections.forEach((section) => {
-      if (section.id === payload.sectionId) {
-        (section as SectionCards).data.push({ ...payload.card });
-      }
-    });
-  },
   deleteDataById(state, payload: DeleteDataPayload) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
@@ -120,42 +114,38 @@ export const mutations: MutationTree<SectionState> = {
       }
     });
   },
-  updateText(state, payload: UpdateTextPayload) {
+  setData(state, payload: AddDataPayload) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
-        (section as SectionText).data = { ...payload.data };
+        // @ts-expect-error
+        section.data.push(...payload.data);
       }
     });
   },
-  updateCard(state, payload: UpdateCardPayload) {
+  updateObjectData(state, payload: UpdateObjectData) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
-        section.data = (section as SectionCards).data.map((card) => {
-          if (card.id === payload.data.id) {
+        section.data = { ...payload.data };
+      }
+    });
+  },
+  updateSingleArrayData(state, payload: UpdateSingleArrayData) {
+    state.sections.forEach((section) => {
+      if (section.id === payload.sectionId) {
+        // @ts-expect-error
+        section.data = section.data.map((item) => {
+          if (item.id === payload.data.id) {
             return { ...payload.data };
           }
-          return card;
+          return item;
         });
       }
     });
   },
-  setCards(state, payload: UpdateAllCardsPayload) {
+  updateAllArrayData(state, payload: UpdateAllArrayData) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
-        section.data = [...payload.data];
-      }
-    });
-  },
-  updatePokemons(state, payload: UpdatePokemonsPayload) {
-    state.sections.forEach((section) => {
-      if (section.id === payload.sectionId) {
-        (section as SectionPokemons).data.push(...payload.data);
-      }
-    });
-  },
-  setPokemons(state, payload: UpdateAllPokemonsPayload) {
-    state.sections.forEach((section) => {
-      if (section.id === payload.sectionId) {
+        // @ts-expect-error
         section.data = [...payload.data];
       }
     });

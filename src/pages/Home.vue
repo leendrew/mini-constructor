@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from 'vue';
 import Draggable from 'vuedraggable';
 import Stack from '@/components/ui/Stack.vue';
 import SectionBase from '@/components/sections/SectionBase.vue';
@@ -9,11 +9,11 @@ import SectionPokemons from '@/components/sections/SectionPokemons.vue';
 import type {
   GlobalState,
   SectionState,
+  SectionTypes,
   SectionId,
-  AddCardPayload,
   DeleteDataPayload,
-  UpdateSectionPayload,
-  UpdateAllPokemonsPayload,
+  UpdateDataPayload,
+  AddDataPayload,
 } from '@/store';
 export default defineComponent({
   name: 'Home',
@@ -40,6 +40,14 @@ export default defineComponent({
     };
   },
   methods: {
+    getSectionByType(type: SectionTypes) {
+      const sectionsMap = {
+        text: SectionText,
+        cards: SectionCards,
+        pokemons: SectionPokemons,
+      };
+      return sectionsMap[type];
+    },
     resetData() {
       this.selectedSectionType = '';
     },
@@ -53,20 +61,14 @@ export default defineComponent({
     deleteSectionById(sectionId: SectionId) {
       this.$store.dispatch('deleteSectionById', sectionId);
     },
-    addCard(payload: AddCardPayload) {
-      this.$store.dispatch('addCard', payload);
-    },
-    updateAllCards(payload: any) {
-      this.$store.dispatch('updateAllCards', payload);
-    },
     deleteDataById(payload: DeleteDataPayload) {
       this.$store.dispatch('deleteDataById', payload);
     },
-    updateSection(payload: UpdateSectionPayload) {
-      this.$store.dispatch('updateSection', payload);
+    addData(payload: AddDataPayload) {
+      this.$store.dispatch('addData', payload);
     },
-    updateAllPokemons(payload: UpdateAllPokemonsPayload) {
-      this.$store.dispatch('updateAllPokemons', payload);
+    updateData(payload: UpdateDataPayload) {
+      this.$store.dispatch('updateData', payload);
     },
     isDragAllowed() {
       return this.isOnEditMod && this.sections.length !== 1;
@@ -93,62 +95,25 @@ export default defineComponent({
           :move="isDragAllowed"
         >
           <template v-for="section of sections">
-            <SectionText
-              v-if="section.type === 'text'"
-              :class="{ draggable: sections.length !== 1 }"
+            <component
+              :is="getSectionByType(section.type)"
               :key="section.id"
+              :class="{ draggable: sections.length !== 1 }"
               :data="section.data"
               @deleteSection="deleteSectionById(section.id)"
-              @updateData="
-                (data) => updateSection({ sectionId: section.id, sectionType: section.type, data })
-              "
-            />
-            <SectionCards
-              v-else-if="section.type === 'cards'"
-              :class="{ draggable: sections.length !== 1 }"
-              :key="section.id"
-              :data="section.data"
-              @deleteSection="deleteSectionById(section.id)"
-              @addCard="(card) => addCard({ sectionId: section.id, card })"
-              @deleteCardById="
-                (cardId) => deleteDataById({ sectionId: section.id, dataId: cardId })
-              "
-              @updateCardById="
-                (card) =>
-                  updateSection({
-                    sectionId: section.id,
-                    sectionType: section.type,
-                    data: card,
-                  })
-              "
-              @updateAllCards="(cards) => updateAllCards({ sectionId: section.id, data: cards })"
-            />
-            <SectionPokemons
-              v-else-if="section.type === 'pokemons'"
-              :class="{ draggable: sections.length !== 1 }"
-              :key="section.id"
-              :data="section.data"
-              @deleteSection="deleteSectionById(section.id)"
-              @deletePokemonById="
-                (pokemonId) => deleteDataById({ sectionId: section.id, dataId: pokemonId })
+              @deleteDataById="(dataId) => deleteDataById({ sectionId: section.id, dataId })"
+              @addData="
+                (data) => addData({ sectionId: section.id, sectionType: section.type, data })
               "
               @updateData="
-                (pokemons) =>
-                  updateSection({
-                    sectionId: section.id,
-                    sectionType: section.type,
-                    data: pokemons,
-                  })
-              "
-              @updateAllPokemons="
-                (pokemons) => updateAllPokemons({ sectionId: section.id, data: pokemons })
+                (data) => updateData({ sectionId: section.id, sectionType: section.type, data })
               "
             />
           </template>
         </Draggable>
       </template>
       <template v-else-if="!isOnEditMod">
-        <SectionBase withoutDelete>
+        <SectionBase>
           <p class="text-h5 text-center">
             This page is empty :( Turn on Edit mod and add sections (they will be saved after
             refresh page)
@@ -156,7 +121,7 @@ export default defineComponent({
         </SectionBase>
       </template>
       <template v-if="isOnEditMod">
-        <SectionBase withoutDelete>
+        <SectionBase>
           <v-select
             class="align-self-center"
             label="Section Type"

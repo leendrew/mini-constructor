@@ -46,15 +46,24 @@ export type SectionId = Section['id'];
 
 export type SectionData = Section['data'];
 
-export interface AddCardPayload {
-  sectionId: SectionId;
-  card: SectionCardsData;
-}
-
 export interface DeleteDataPayload {
   sectionId: SectionId;
   dataId: SectionCards['id'] | SectionPokemons['id'];
 }
+
+export interface AddCardPayload {
+  sectionId: SectionId;
+  sectionType: SectionCards['type'];
+  data: SectionCards['data'];
+}
+
+export interface AddPokemonsPayload {
+  sectionId: SectionId;
+  sectionType: SectionPokemons['type'];
+  data: SectionPokemons['data'];
+}
+
+export type AddDataPayload = AddCardPayload | AddPokemonsPayload;
 
 export interface UpdateTextPayload {
   sectionId: SectionId;
@@ -62,29 +71,33 @@ export interface UpdateTextPayload {
   data: SectionTextData;
 }
 
-export interface UpdateCardPayload {
+export interface UpdateAllCardsPayload {
+  sectionId: SectionId;
+  sectionType: SectionCards['type'];
+  data: SectionCardsData[];
+}
+
+export interface UpdateSingleCardPayload {
   sectionId: SectionId;
   sectionType: SectionCards['type'];
   data: SectionCardsData;
 }
 
-export interface UpdateAllCardsPayload {
-  sectionId: SectionId;
-  data: SectionCards['data'];
-}
+export type UpdateCardsPayload = UpdateSingleCardPayload | UpdateAllCardsPayload;
 
 export interface UpdatePokemonsPayload {
   sectionId: SectionId;
   sectionType: SectionPokemons['type'];
-  data: SectionPokemons['data'];
+  data: SectionPokemonsData[];
 }
 
-export interface UpdateAllPokemonsPayload {
-  sectionId: SectionId;
-  data: SectionPokemons['data'];
-}
+export type UpdateDataPayload = UpdateTextPayload | UpdateCardsPayload | UpdatePokemonsPayload;
 
-export type UpdateSectionPayload = UpdateTextPayload | UpdateCardPayload | UpdatePokemonsPayload;
+export type UpdateSingleArrayData = UpdateSingleCardPayload;
+
+export type UpdateAllArrayData = UpdateAllCardsPayload | UpdatePokemonsPayload;
+
+export type UpdateObjectData = UpdateTextPayload;
 
 // DND Specific
 

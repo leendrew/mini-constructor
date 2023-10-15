@@ -52,21 +52,21 @@ export default defineComponent({
         return;
       }
       this.removeCardFromEditModById(card.id);
-      this.$emit('updateCardById', card);
+      this.$emit('updateData', card);
     },
     deleteCard(id: SectionCards['id']) {
-      if (this.data.length === 0) {
+      if (this.data.length === 1) {
         this.deleteSection();
         return;
       }
-      this.$emit('deleteCardById', id);
+      this.$emit('deleteDataById', id);
     },
     addCard(card: SectionCardsData) {
       if (!this.checkIsDataEmpty(card)) {
         return;
       }
       this.removeCardFromEditModById(card.id);
-      this.$emit('addCard', card);
+      this.$emit('addData', [card]);
       this.resetNewCardState();
     },
     resetState() {
@@ -93,7 +93,7 @@ export default defineComponent({
         return;
       }
       if ('moved' in e) {
-        this.$emit('updateAllCards', this.data);
+        this.$emit('updateData', this.data);
         return;
       }
     },
@@ -110,7 +110,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <SectionBase @deleteSection="deleteSection">
+  <SectionBase
+    @deleteSection="deleteSection"
+    :hideHandle="!isOnEditMod && sectionsLength <= 1"
+    :hideAction="!isOnEditMod"
+  >
     <Draggable
       class="grid"
       tag="div"

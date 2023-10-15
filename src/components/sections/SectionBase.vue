@@ -5,17 +5,13 @@ import Stack from '@/components/ui/Stack.vue';
 export default defineComponent({
   name: 'SectionBase',
   props: {
-    withoutDelete: {
+    hideHandle: {
       type: Boolean as PropType<boolean>,
-      default: false,
+      default: true,
     },
-  },
-  computed: {
-    isOnEditMod() {
-      return (this.$store.state.global as GlobalState).isOnEditMod;
-    },
-    sectionsLength() {
-      return this.$store.getters.sectionsLength;
+    hideAction: {
+      type: Boolean as PropType<boolean>,
+      default: true,
     },
   },
   methods: {
@@ -29,11 +25,11 @@ export default defineComponent({
 <template>
   <v-sheet class="pa-6" tag="section" rounded outlined>
     <Stack direction="column" :gap="4">
-      <template v-if="!withoutDelete && isOnEditMod && sectionsLength > 1">
+      <template v-if="!hideHandle">
         <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
       </template>
       <slot />
-      <template v-if="!withoutDelete && isOnEditMod">
+      <template v-if="!hideAction">
         <v-btn class="align-self-start" color="red" text outlined @click="deleteSection">
           Delete Section
         </v-btn>

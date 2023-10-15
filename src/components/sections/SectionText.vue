@@ -57,7 +57,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <SectionBase @deleteSection="deleteSection">
+  <SectionBase
+    @deleteSection="deleteSection"
+    :hideHandle="!isOnEditMod && sectionsLength <= 1"
+    :hideAction="!isOnEditMod"
+  >
     <template v-if="!isOnLocalEditMod">
       <h4 class="ws-pw text-h4">{{ data.title }}</h4>
       <p class="ws-pw text-body-1 mb-0">{{ data.description }}</p>
