@@ -1,7 +1,6 @@
 import { pokemonsApi } from '@/api';
 import { generateNumberId } from '@/utils';
 import type { GetterTree, ActionTree, MutationTree } from 'vuex';
-import { section } from '.';
 import type { RootState } from '../store';
 import type {
   Section,

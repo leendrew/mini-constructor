@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import type { GlobalState } from '@/store';
 import Stack from '@/components/ui/Stack.vue';
 export default defineComponent({
   name: 'SectionBase',
