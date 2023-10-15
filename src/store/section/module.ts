@@ -48,12 +48,15 @@ export const actions: ActionTree<SectionState, RootState> = {
     commit('addSection', newSection);
     if (sectionType === 'pokemons') {
       const pokemonsSectionData = await pokemonsApi.fetchPokemons();
-      commit('updatePokemons', {
+      commit('updateAllArrayData', {
         sectionId: newSectionId,
         sectionType: sectionType,
         data: pokemonsSectionData,
       });
     }
+  },
+  updateAllSections({ commit }, payload: Section[]) {
+    commit('setSections', payload);
   },
   deleteSectionById({ commit }, sectionId: SectionId) {
     commit('deleteById', sectionId);

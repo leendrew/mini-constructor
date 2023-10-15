@@ -101,12 +101,10 @@ export default defineComponent({
               :class="{ draggable: sections.length !== 1 }"
               :data="section.data"
               @deleteSection="deleteSectionById(section.id)"
-              @deleteDataById="(dataId) => deleteDataById({ sectionId: section.id, dataId })"
-              @addData="
-                (data) => addData({ sectionId: section.id, sectionType: section.type, data })
-              "
+              @deleteDataById="deleteDataById({ sectionId: section.id, dataId: $event })"
+              @addData="addData({ sectionId: section.id, sectionType: section.type, data: $event })"
               @updateData="
-                (data) => updateData({ sectionId: section.id, sectionType: section.type, data })
+                updateData({ sectionId: section.id, sectionType: section.type, data: $event })
               "
             />
           </template>

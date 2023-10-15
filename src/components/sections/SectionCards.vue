@@ -55,7 +55,7 @@ export default defineComponent({
       this.$emit('updateData', card);
     },
     deleteCard(id: SectionCards['id']) {
-      if (this.data.length === 1) {
+      if (this.data.length <= 1) {
         this.deleteSection();
         return;
       }
@@ -112,7 +112,7 @@ export default defineComponent({
 <template>
   <SectionBase
     @deleteSection="deleteSection"
-    :hideHandle="!isOnEditMod && sectionsLength <= 1"
+    :hideHandle="!isOnEditMod || sectionsLength === 1"
     :hideAction="!isOnEditMod"
   >
     <Draggable

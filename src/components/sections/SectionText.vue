@@ -59,7 +59,7 @@ export default defineComponent({
 <template>
   <SectionBase
     @deleteSection="deleteSection"
-    :hideHandle="!isOnEditMod && sectionsLength <= 1"
+    :hideHandle="!isOnEditMod || sectionsLength === 1"
     :hideAction="!isOnEditMod"
   >
     <template v-if="!isOnLocalEditMod">
