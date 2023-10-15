@@ -51,6 +51,13 @@ export interface DeleteDataPayload {
   dataId: SectionCards['id'] | SectionPokemons['id'];
 }
 
+// Just for disable TS error
+interface AddTextPayload {
+  sectionId: SectionId;
+  sectionType: SectionText['type'];
+  data: SectionText['data'];
+}
+
 export interface AddCardPayload {
   sectionId: SectionId;
   sectionType: SectionCards['type'];
@@ -63,7 +70,7 @@ export interface AddPokemonsPayload {
   data: SectionPokemons['data'];
 }
 
-export type AddDataPayload = AddCardPayload | AddPokemonsPayload;
+export type AddDataPayload = AddTextPayload | AddCardPayload | AddPokemonsPayload;
 
 export interface UpdateTextPayload {
   sectionId: SectionId;

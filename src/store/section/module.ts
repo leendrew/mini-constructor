@@ -1,6 +1,7 @@
 import { pokemonsApi } from '@/api';
 import { generateNumberId } from '@/utils';
 import type { GetterTree, ActionTree, MutationTree } from 'vuex';
+import { section } from '.';
 import type { RootState } from '../store';
 import type {
   Section,
@@ -65,13 +66,8 @@ export const actions: ActionTree<SectionState, RootState> = {
     commit('deleteDataById', payload);
   },
   addData({ commit }, payload: AddDataPayload) {
-    switch (payload.sectionType) {
-      case 'cards':
-        commit('setData', payload);
-        break;
-      case 'pokemons':
-        commit('setData', payload);
-        break;
+    if (payload.sectionType !== 'cards') {
+      commit('setData', payload);
     }
   },
   updateData({ commit }, payload: UpdateDataPayload) {
