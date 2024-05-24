@@ -6,6 +6,7 @@ import { pokemonsApi } from '@/api';
 import type { SectionPokemonsData, GlobalState, SectionPokemons, ChangeDnDEvent } from '@/store';
 import { fetchPokemons } from '@/api/pokemons';
 import CardBase from '../CardBase.vue';
+
 export default defineComponent({
   name: 'SectionPokemons',
   components: {

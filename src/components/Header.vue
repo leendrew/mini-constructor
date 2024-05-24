@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import type { GlobalState } from '@/store';
+
 export default defineComponent({
   name: 'Header',
   computed: {

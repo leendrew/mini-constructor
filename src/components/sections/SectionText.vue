@@ -2,6 +2,7 @@
 import { defineComponent, type PropType } from 'vue';
 import SectionBase from './SectionBase.vue';
 import type { SectionTextData, GlobalState } from '@/store';
+
 export default defineComponent({
   name: 'SectionText',
   props: {

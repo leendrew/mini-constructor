@@ -15,6 +15,7 @@ import type {
   UpdateDataPayload,
   AddDataPayload,
 } from '@/store';
+
 export default defineComponent({
   name: 'Home',
   components: {

@@ -5,6 +5,7 @@ import SectionBase from './SectionBase.vue';
 import CardBase from '@/components/CardBase.vue';
 import type { SectionCardsData, GlobalState, SectionCards, ChangeDnDEvent } from '@/store';
 import { generateNumberId } from '@/utils';
+
 export default defineComponent({
   name: 'SectionCards',
   components: {
