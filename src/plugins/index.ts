@@ -1,1 +1,1 @@
-export { vuetify } from './vuetify';
+export * from './vuetify';
