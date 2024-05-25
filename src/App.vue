@@ -17,18 +17,8 @@ export default defineComponent({
 </template>
 
 <style>
-html {
-  overflow-y: auto;
-}
-
 .d-contents {
   display: contents;
-}
-
-.stack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 
 .ws-pw {

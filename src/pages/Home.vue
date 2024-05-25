@@ -103,20 +103,27 @@ export default defineComponent({
           forceFallback
           @move="() => isDragAllowed"
         >
-          <template v-for="section of sections">
-            <component
-              :key="section.id"
-              :is="getSectionByType(section.type)"
-              :class="{ draggable: sections.length !== 1 }"
-              :data="section.data"
-              @deleteSection="deleteSectionById(section.id)"
-              @deleteDataById="deleteDataById({ sectionId: section.id, dataId: $event })"
-              @addData="addData({ sectionId: section.id, sectionType: section.type, data: $event })"
-              @updateData="
-                updateData({ sectionId: section.id, sectionType: section.type, data: $event })
-              "
-            />
-          </template>
+          <Stack
+            direction="column"
+            :gap="4"
+          >
+            <template v-for="section of sections">
+              <component
+                :key="section.id"
+                :is="getSectionByType(section.type)"
+                :class="{ draggable: sections.length !== 1 }"
+                :data="section.data"
+                @deleteSection="deleteSectionById(section.id)"
+                @deleteDataById="deleteDataById({ sectionId: section.id, dataId: $event })"
+                @addData="
+                  addData({ sectionId: section.id, sectionType: section.type, data: $event })
+                "
+                @updateData="
+                  updateData({ sectionId: section.id, sectionType: section.type, data: $event })
+                "
+              />
+            </template>
+          </Stack>
         </Draggable>
       </template>
       <template v-else-if="!isOnEditMod">
