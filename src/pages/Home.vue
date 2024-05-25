@@ -92,7 +92,6 @@ export default defineComponent({
       <template v-if="!!sections.length">
         <Draggable
           v-model="sections"
-          class="stack"
           tag="div"
           group="sections"
           ghostClass="ghost"
@@ -129,8 +128,8 @@ export default defineComponent({
       <template v-else-if="!isOnEditMod">
         <SectionBase>
           <p class="text-h5 text-center">
-            This page is empty :( Turn on Edit mod and add sections (they will be saved after
-            refresh page)
+            This page is empty. Turn on Edit Mode and add sections (they will be saved after refresh
+            page)
           </p>
         </SectionBase>
       </template>
