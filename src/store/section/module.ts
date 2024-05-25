@@ -68,9 +68,7 @@ export const actions: ActionTree<SectionState, RootState> = {
     commit('deleteDataById', payload);
   },
   addData({ commit }, payload: AddDataPayload) {
-    if (payload.sectionType !== 'cards') {
-      commit('setData', payload);
-    }
+    commit('setData', payload);
   },
   updateData({ commit }, payload: UpdateDataPayload) {
     switch (payload.sectionType) {
