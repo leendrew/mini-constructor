@@ -11,9 +11,9 @@ import type {
   DeleteDataPayload,
   AddDataPayload,
   UpdateDataPayload,
-  UpdateObjectData,
-  UpdateSingleArrayData,
-  UpdateAllArrayData,
+  UpdateObjectDataPayload,
+  UpdateSingleArrayDataPayload,
+  UpdateAllArrayDataPayload,
 } from './types';
 
 export const state: SectionState = {
@@ -27,7 +27,10 @@ export const getters: GetterTree<SectionState, RootState> = {
 export const actions: ActionTree<SectionState, RootState> = {
   async addNewSection({ commit }, sectionType: SectionTypes) {
     const sectionDataMap: Record<SectionTypes, SectionData> = {
-      text: { title: 'Sample Title', description: 'Sample Description' },
+      text: {
+        title: 'Sample Title',
+        description: 'Sample Description',
+      },
       cards: [
         {
           id: generateNumberId(),
@@ -47,11 +50,11 @@ export const actions: ActionTree<SectionState, RootState> = {
     };
     commit('addSection', newSection);
     if (sectionType === 'pokemons') {
-      const pokemonsSectionData = await pokemonsApi.fetchPokemons();
+      const pokemonsDataInit = await pokemonsApi.fetchPokemons();
       commit('updateAllArrayData', {
         sectionId: newSectionId,
         sectionType: sectionType,
-        data: pokemonsSectionData,
+        data: pokemonsDataInit,
       });
     }
   },
@@ -120,14 +123,14 @@ export const mutations: MutationTree<SectionState> = {
       }
     });
   },
-  updateObjectData(state, payload: UpdateObjectData) {
+  updateObjectData(state, payload: UpdateObjectDataPayload) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
         section.data = { ...payload.data };
       }
     });
   },
-  updateSingleArrayData(state, payload: UpdateSingleArrayData) {
+  updateSingleArrayData(state, payload: UpdateSingleArrayDataPayload) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
         // @ts-expect-error
@@ -140,7 +143,7 @@ export const mutations: MutationTree<SectionState> = {
       }
     });
   },
-  updateAllArrayData(state, payload: UpdateAllArrayData) {
+  updateAllArrayData(state, payload: UpdateAllArrayDataPayload) {
     state.sections.forEach((section) => {
       if (section.id === payload.sectionId) {
         // @ts-expect-error

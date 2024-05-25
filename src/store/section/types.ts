@@ -100,11 +100,11 @@ export interface UpdatePokemonsPayload {
 
 export type UpdateDataPayload = UpdateTextPayload | UpdateCardsPayload | UpdatePokemonsPayload;
 
-export type UpdateSingleArrayData = UpdateSingleCardPayload;
+export type UpdateSingleArrayDataPayload = UpdateSingleCardPayload;
 
-export type UpdateAllArrayData = UpdateAllCardsPayload | UpdatePokemonsPayload;
+export type UpdateAllArrayDataPayload = UpdateAllCardsPayload | UpdatePokemonsPayload;
 
-export type UpdateObjectData = UpdateTextPayload;
+export type UpdateObjectDataPayload = UpdateTextPayload;
 
 // DND Specific
 
