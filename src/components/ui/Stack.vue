@@ -1,8 +1,14 @@
 <script lang="ts">
+import { defineComponent } from 'vue';
+import type { PropType, Component } from 'vue';
 
 export default defineComponent({
   name: 'Stack',
   props: {
+    as: {
+      type: [String, Object] as PropType<string | Component>,
+      default: 'div',
+    },
     direction: {
       type: String as PropType<'row' | 'row-reverse' | 'column' | 'column-reverse'>,
       default: 'row',
@@ -37,7 +43,10 @@ export default defineComponent({
 </script>
 
 <template>
-  <div :style="styles">
+  <component
+    :is="as"
+    :style="styles"
+  >
     <slot />
-  </div>
+  </component>
 </template>
