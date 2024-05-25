@@ -119,12 +119,12 @@ export default defineComponent({
     resetNewCardState() {
       this.newCardId = generateNumberId();
 
-      const payload = {
+      const payload: SectionCardsData = {
         id: this.newCardId,
         icon: '',
         title: '',
         description: '',
-      } satisfies SectionCardsData;
+      };
 
       this.addCardToEditMod(payload);
     },

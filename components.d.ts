@@ -9,7 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
     CardBase: typeof import('./src/components/CardBase.vue')['default']
-    Header: typeof import('./src/components/Header.vue')['default']
     ModeToggler: typeof import('./src/components/ModeToggler.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -25,7 +24,6 @@ declare module 'vue' {
     VIcon: typeof import('vuetify/lib')['VIcon']
     VImg: typeof import('vuetify/lib')['VImg']
     VMain: typeof import('vuetify/lib')['VMain']
-    VRow: typeof import('vuetify/lib')['VRow']
     VSelect: typeof import('vuetify/lib')['VSelect']
     VSheet: typeof import('vuetify/lib')['VSheet']
     VSwitch: typeof import('vuetify/lib')['VSwitch']
