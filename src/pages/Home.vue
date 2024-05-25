@@ -17,6 +17,12 @@ import type {
   AddDataPayload,
 } from '@/store';
 
+const sectionComponentMap: Record<SectionTypes, Component> = {
+  text: SectionText,
+  cards: SectionCards,
+  pokemons: SectionPokemons,
+};
+
 export default defineComponent({
   name: 'Home',
   components: {
@@ -36,6 +42,9 @@ export default defineComponent({
         this.$store.dispatch('updateAllSections', updatedSections);
       },
     },
+    isDragAllowed() {
+      return this.isOnEditMod && this.sections.length !== 1;
+    },
   },
   data() {
     return {
@@ -44,17 +53,11 @@ export default defineComponent({
     };
   },
   methods: {
-    getSectionByType(type: SectionTypes) {
-      const sectionsMap: Record<SectionTypes, Component> = {
-        text: SectionText,
-        cards: SectionCards,
-        pokemons: SectionPokemons,
-      };
-
-      return sectionsMap[type];
-    },
     resetData() {
       this.selectedSectionType = '';
+    },
+    getSectionComponentByType(type: SectionTypes) {
+      return sectionComponentMap[type];
     },
     addNewSection() {
       if (!this.selectedSectionType) {
@@ -75,9 +78,6 @@ export default defineComponent({
     },
     updateData(payload: UpdateDataPayload) {
       this.$store.dispatch('updateData', payload);
-    },
-    isDragAllowed() {
-      return this.isOnEditMod && this.sections.length !== 1;
     },
   },
 });
@@ -109,8 +109,8 @@ export default defineComponent({
             <template v-for="section of sections">
               <component
                 :key="section.id"
-                :is="getSectionByType(section.type)"
-                :class="{ draggable: sections.length !== 1 }"
+                :is="getSectionComponentByType(section.type)"
+                :class="{ draggable: isDragAllowed }"
                 :data="section.data"
                 @deleteSection="deleteSectionById(section.id)"
                 @deleteDataById="deleteDataById({ sectionId: section.id, dataId: $event })"
