@@ -10,7 +10,9 @@ import CardBase from '../CardBase.vue';
 export default defineComponent({
   name: 'SectionPokemons',
   components: {
+    SectionBase,
     Draggable,
+    CardBase,
   },
   props: {
     data: {

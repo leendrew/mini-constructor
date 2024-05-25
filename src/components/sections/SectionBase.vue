@@ -4,6 +4,9 @@ import Stack from '@/components/ui/Stack.vue';
 
 export default defineComponent({
   name: 'SectionBase',
+  components: {
+    Stack,
+  },
   props: {
     hideHandle: {
       type: Boolean as PropType<boolean>,

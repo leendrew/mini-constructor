@@ -5,6 +5,9 @@ import type { SectionTextData, GlobalState } from '@/store';
 
 export default defineComponent({
   name: 'SectionText',
+  components: {
+    SectionBase,
+  },
   props: {
     data: {
       type: Object as PropType<SectionTextData>,

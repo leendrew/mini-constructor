@@ -9,7 +9,10 @@ import { generateNumberId } from '@/utils';
 export default defineComponent({
   name: 'SectionCards',
   components: {
+    SectionBase,
     Draggable,
+    CardBase,
+    Stack,
   },
   props: {
     data: {

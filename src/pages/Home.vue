@@ -19,7 +19,9 @@ import type {
 export default defineComponent({
   name: 'Home',
   components: {
+    Stack,
     Draggable,
+    SectionBase,
   },
   computed: {
     isOnEditMod() {

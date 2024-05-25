@@ -1,9 +1,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Stack from './ui/Stack.vue';
+import Stack from '@/components/ui/Stack.vue';
 
 export default defineComponent({
   name: 'CardBase',
+  components: {
+    Stack,
+  },
 });
 </script>
 
