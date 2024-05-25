@@ -1,8 +1,10 @@
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
 import Draggable from 'vuedraggable';
 import SectionBase from './SectionBase.vue';
 import CardBase from '@/components/CardBase.vue';
+import Stack from '@/components/ui/Stack.vue';
 import type { SectionCardsData, GlobalState, SectionCards, ChangeDnDEvent } from '@/store';
 import { generateNumberId } from '@/utils';
 
@@ -20,6 +22,30 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      cardsOnEditMod: {} as Record<string, SectionCardsData>,
+      newCardId: generateNumberId(),
+      icons: [
+        {
+          text: 'Bookmark',
+          value: 'mdi-bookmark-outline',
+        },
+        {
+          text: 'Alert',
+          value: 'mdi-alert-circle-outline',
+        },
+        {
+          text: 'Bucket',
+          value: 'mdi-bucket-outline',
+        },
+        {
+          text: 'Bullseye',
+          value: 'mdi-bullseye',
+        },
+      ],
+    };
+  },
   computed: {
     isOnEditMod() {
       return (this.$store.state.global as GlobalState).isOnEditMod;
@@ -27,79 +53,11 @@ export default defineComponent({
     sectionsLength() {
       return this.$store.getters.sectionsLength;
     },
-  },
-  data() {
-    return {
-      cardsOnEditMod: {} as Record<string, SectionCardsData>,
-      newCardId: generateNumberId(),
-      icons: [
-        { text: 'Bookmark', value: 'mdi-bookmark-outline' },
-        { text: 'Alert', value: 'mdi-alert-circle-outline' },
-        { text: 'Bucket', value: 'mdi-bucket-outline' },
-        { text: 'Bullseye', value: 'mdi-bullseye' },
-      ],
-    };
-  },
-  methods: {
-    addCardToEditMod(card: SectionCardsData) {
-      this.cardsOnEditMod = { ...this.cardsOnEditMod, [card.id]: { ...card } };
-    },
-    removeCardFromEditModById(id: number) {
-      delete this.cardsOnEditMod[id];
-      this.cardsOnEditMod = { ...this.cardsOnEditMod };
-    },
-    checkIsCardOnEditMod(id: number) {
-      return this.cardsOnEditMod[id] !== undefined;
-    },
-    updateCard(card: SectionCardsData) {
-      if (!this.checkIsDataEmpty(card)) {
-        return;
-      }
-      this.removeCardFromEditModById(card.id);
-      this.$emit('updateData', card);
-    },
-    deleteCard(id: SectionCards['id']) {
-      if (this.data.length <= 1) {
-        this.deleteSection();
-        return;
-      }
-      this.$emit('deleteDataById', id);
-    },
-    addCard(card: SectionCardsData) {
-      if (!this.checkIsDataEmpty(card)) {
-        return;
-      }
-      this.removeCardFromEditModById(card.id);
-      this.$emit('addData', [card]);
-      this.resetNewCardState();
-    },
-    resetState() {
-      this.cardsOnEditMod = {};
-      this.resetNewCardState();
-    },
-    resetNewCardState() {
-      this.newCardId = generateNumberId();
-      this.addCardToEditMod({ id: this.newCardId, icon: '', title: '', description: '' });
-    },
-    deleteSection() {
-      this.$emit('deleteSection');
-    },
-    checkIsDataEmpty(card: SectionCardsData) {
-      return card.title && card.description && card.icon;
-    },
     isDragAllowed() {
       return this.isOnEditMod;
     },
-    onChange(e: ChangeDnDEvent<SectionCardsData>) {
-      if ('removed' in e) {
-        const data = e.removed;
-        this.deleteCard(data.element.id);
-        return;
-      }
-      if ('moved' in e) {
-        this.$emit('updateData', this.data);
-        return;
-      }
+    isHideHandle() {
+      return !this.isOnEditMod || this.sectionsLength === 1;
     },
   },
   watch: {
@@ -110,82 +68,193 @@ export default defineComponent({
   beforeMount() {
     this.resetState();
   },
+  methods: {
+    addCardToEditMod(card: SectionCardsData) {
+      this.cardsOnEditMod = {
+        ...this.cardsOnEditMod,
+        [card.id]: { ...card },
+      };
+    },
+    removeCardFromEditModById(id: number) {
+      delete this.cardsOnEditMod[id];
+      this.cardsOnEditMod = {
+        ...this.cardsOnEditMod,
+      };
+    },
+    checkIsCardOnEditMod(id: number) {
+      return this.cardsOnEditMod[id] !== undefined;
+    },
+    updateCard(card: SectionCardsData) {
+      if (!this.checkIsDataEmpty(card)) {
+        return;
+      }
+
+      this.removeCardFromEditModById(card.id);
+      this.$emit('updateData', card);
+    },
+    deleteCard(id: SectionCards['id']) {
+      if (this.data.length <= 1) {
+        this.deleteSection();
+        return;
+      }
+
+      this.$emit('deleteDataById', id);
+    },
+    addCard(card: SectionCardsData) {
+      if (!this.checkIsDataEmpty(card)) {
+        return;
+      }
+
+      this.removeCardFromEditModById(card.id);
+
+      const payload = [card];
+      this.$emit('addData', payload);
+
+      this.resetNewCardState();
+    },
+    resetState() {
+      this.cardsOnEditMod = {};
+      this.resetNewCardState();
+    },
+    resetNewCardState() {
+      this.newCardId = generateNumberId();
+
+      const payload = {
+        id: this.newCardId,
+        icon: '',
+        title: '',
+        description: '',
+      } satisfies SectionCardsData;
+
+      this.addCardToEditMod(payload);
+    },
+    deleteSection() {
+      this.$emit('deleteSection');
+    },
+    checkIsDataEmpty(card: SectionCardsData) {
+      return card.title && card.description && card.icon;
+    },
+    onChange(e: ChangeDnDEvent<SectionCardsData>) {
+      if ('removed' in e) {
+        const data = e.removed;
+        this.deleteCard(data.element.id);
+        return;
+      }
+
+      if ('moved' in e) {
+        this.$emit('updateData', this.data);
+        return;
+      }
+    },
+  },
 });
 </script>
 
 <template>
   <SectionBase
-    @deleteSection="deleteSection"
-    :hideHandle="!isOnEditMod || sectionsLength === 1"
+    :hideHandle="isHideHandle"
     :hideAction="!isOnEditMod"
+    @deleteSection="deleteSection"
   >
     <Draggable
-      class="grid"
       tag="div"
+      class="grid"
       group="cards"
       ghostClass="ghost"
       draggable=".draggable"
       handle=".handle"
-      :forceFallback="true"
       :scrollSensitivity="200"
       :list="data"
       :disabled="!isOnEditMod"
-      @move="isDragAllowed"
+      forceFallback
+      @move="() => isDragAllowed"
       @change="onChange"
     >
       <template v-for="card of data">
-        <CardBase :class="{ draggable: isOnEditMod }" :key="card.id">
-          <template v-if="isOnEditMod">
-            <v-icon class="handle align-self-start" large>mdi-drag</v-icon>
+        <CardBase
+          :key="card.id"
+          :class="{ draggable: isDragAllowed }"
+        >
+          <template v-if="isDragAllowed">
+            <v-icon
+              class="handle align-self-start"
+              large
+            >
+              mdi-drag
+            </v-icon>
           </template>
           <template v-if="!checkIsCardOnEditMod(card.id)">
-            <v-icon class="icon" color="primary">{{ card.icon }}</v-icon>
+            <v-icon
+              class="icon"
+              color="primary"
+            >
+              {{ card.icon }}
+            </v-icon>
             <h4 class="ws-pw text-h5 pr-5">{{ card.title }}</h4>
             <p class="ws-pw text-body-1 mb-0 flex-grow-1">{{ card.description }}</p>
             <template v-if="isOnEditMod">
               <Stack :gap="3">
-                <v-btn color="amber" text outlined @click="addCardToEditMod(card)">Edit</v-btn>
-                <v-btn color="red" text outlined @click="deleteCard(card.id)"> Delete </v-btn>
+                <v-btn
+                  color="amber"
+                  text
+                  outlined
+                  @click="addCardToEditMod(card)"
+                >
+                  Edit
+                </v-btn>
+                <v-btn
+                  color="red"
+                  text
+                  outlined
+                  @click="deleteCard(card.id)"
+                >
+                  Delete
+                </v-btn>
               </Stack>
             </template>
           </template>
           <template v-else>
             <v-select
-              label="Icon"
-              outlined
-              hide-details
-              :items="icons"
-              :prepend-inner-icon="cardsOnEditMod[card.id].icon"
               v-model="cardsOnEditMod[card.id].icon"
+              label="Icon"
+              :items="icons"
+              :prependInnerIcon="cardsOnEditMod[card.id].icon"
+              outlined
+              hideDetails
             >
-              <template v-slot:item="{ item, props }">
+              <template #item="{ item, props }">
                 <Stack :gap="3">
-                  <v-icon color="primary" v-bind="props">{{ item.value }} </v-icon>
+                  <v-icon
+                    color="primary"
+                    v-bind="props"
+                  >
+                    {{ item.value }}
+                  </v-icon>
                   {{ item.text }}
                 </Stack>
               </template>
             </v-select>
             <v-text-field
-              label="Title"
               v-model.trim="cardsOnEditMod[card.id].title"
+              label="Title"
               outlined
-              hide-details
+              hideDetails
             />
             <v-textarea
+              v-model.trim="cardsOnEditMod[card.id].description"
               class="flex-grow-1"
               label="Description"
-              v-model.trim="cardsOnEditMod[card.id].description"
+              :rows="3"
               outlined
-              auto-grow
-              rows="3"
-              hide-details
+              autoGrow
+              hideDetails
             />
             <v-btn
               color="primary"
+              :disabled="!checkIsDataEmpty(cardsOnEditMod[card.id])"
               text
               outlined
               @click="updateCard(cardsOnEditMod[card.id])"
-              :disabled="!checkIsDataEmpty(cardsOnEditMod[card.id])"
             >
               Save
             </v-btn>
@@ -195,41 +264,46 @@ export default defineComponent({
       <template v-if="isOnEditMod">
         <CardBase>
           <v-select
-            label="Icon"
-            outlined
-            hide-details
             v-model="cardsOnEditMod[newCardId].icon"
+            label="Icon"
             :items="icons"
-            :prepend-inner-icon="cardsOnEditMod[newCardId].icon"
+            :prependInnerIcon="cardsOnEditMod[newCardId].icon"
+            outlined
+            hideDetails
           >
-            <template v-slot:item="{ item, props }">
+            <template #item="{ item, props }">
               <Stack :gap="3">
-                <v-icon color="primary" v-bind="props">{{ item.value }} </v-icon>
+                <v-icon
+                  v-bind="props"
+                  color="primary"
+                >
+                  {{ item.value }}
+                </v-icon>
                 {{ item.text }}
               </Stack>
             </template>
           </v-select>
           <v-text-field
-            label="Title"
             v-model.trim="cardsOnEditMod[newCardId].title"
+            label="Title"
             outlined
-            hide-details
+            hideDetails
           />
           <v-textarea
+            v-model.trim="cardsOnEditMod[newCardId].description"
             class="flex-grow-1"
             label="Description"
-            v-model.trim="cardsOnEditMod[newCardId].description"
+            :rows="3"
             outlined
-            auto-grow
-            rows="3"
-            hide-details
+            autoGrow
+            hideDetails
           />
           <v-btn
             color="primary"
+            :disabled="!checkIsDataEmpty(cardsOnEditMod[newCardId])"
             text
             outlined
             @click="addCard(cardsOnEditMod[newCardId])"
-            :disabled="!checkIsDataEmpty(cardsOnEditMod[newCardId])"
           >
             Add New Card
           </v-btn>

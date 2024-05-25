@@ -1,5 +1,6 @@
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
 import SectionBase from './SectionBase.vue';
 import type { SectionTextData, GlobalState } from '@/store';
 
@@ -14,14 +15,6 @@ export default defineComponent({
       required: true,
     },
   },
-  computed: {
-    isOnEditMod() {
-      return (this.$store.state.global as GlobalState).isOnEditMod;
-    },
-    sectionsLength() {
-      return this.$store.getters.sectionsLength;
-    },
-  },
   data() {
     return {
       isOnLocalEditMod: false,
@@ -29,15 +22,35 @@ export default defineComponent({
       description: this.data.description,
     };
   },
+  computed: {
+    isOnEditMod() {
+      return (this.$store.state.global as GlobalState).isOnEditMod;
+    },
+    sectionsLength() {
+      return this.$store.getters.sectionsLength;
+    },
+    isEmpty() {
+      return this.title && this.description;
+    },
+    isHideHandle() {
+      return !this.isOnEditMod || this.sectionsLength === 1;
+    },
+  },
   methods: {
     toggleLocalEditMod() {
       this.isOnLocalEditMod = !this.isOnLocalEditMod;
     },
     updateData() {
-      if (!this.checkIsEmpty()) {
+      if (!this.isEmpty) {
         return;
       }
-      this.$emit('updateData', { title: this.title, description: this.description });
+
+      const payload = {
+        title: this.title,
+        description: this.description,
+      };
+
+      this.$emit('updateData', payload);
       this.isOnLocalEditMod = false;
     },
     resetState() {
@@ -47,9 +60,6 @@ export default defineComponent({
     },
     deleteSection() {
       this.$emit('deleteSection');
-    },
-    checkIsEmpty() {
-      return this.title && this.description;
     },
   },
   watch: {
@@ -62,36 +72,47 @@ export default defineComponent({
 
 <template>
   <SectionBase
-    @deleteSection="deleteSection"
-    :hideHandle="!isOnEditMod || sectionsLength === 1"
+    :hideHandle="isHideHandle"
     :hideAction="!isOnEditMod"
+    @deleteSection="deleteSection"
   >
     <template v-if="!isOnLocalEditMod">
       <h4 class="ws-pw text-h4">{{ data.title }}</h4>
       <p class="ws-pw text-body-1 mb-0">{{ data.description }}</p>
       <template v-if="isOnEditMod">
-        <v-btn class="align-self-start" color="amber" text outlined @click="toggleLocalEditMod">
+        <v-btn
+          class="align-self-start"
+          color="amber"
+          text
+          outlined
+          @click="toggleLocalEditMod"
+        >
           Edit
         </v-btn>
       </template>
     </template>
     <template v-else>
-      <v-text-field label="Title" v-model.trim="title" outlined hide-details />
-      <v-textarea
-        label="Description"
-        v-model.trim="description"
+      <v-text-field
+        v-model.trim="title"
+        label="Title"
         outlined
-        hide-details
-        auto-grow
-        rows="3"
+        hideDetails
+      />
+      <v-textarea
+        v-model.trim="description"
+        label="Description"
+        :rows="3"
+        outlined
+        autoGrow
+        hideDetails
       />
       <v-btn
         class="align-self-start"
         color="primary"
+        :disabled="!isEmpty"
         text
         outlined
         @click="updateData"
-        :disabled="!checkIsEmpty()"
       >
         Save
       </v-btn>

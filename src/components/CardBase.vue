@@ -11,8 +11,17 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-sheet class="pa-4 card" rounded outlined tag="article">
-    <Stack class="card-inner" direction="column" :gap="4">
+  <v-sheet
+    tag="article"
+    class="pa-4 card"
+    rounded
+    outlined
+  >
+    <Stack
+      class="card-inner"
+      direction="column"
+      :gap="4"
+    >
       <slot />
     </Stack>
   </v-sheet>

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import type { Component } from 'vue';
 import Draggable from 'vuedraggable';
 import Stack from '@/components/ui/Stack.vue';
 import SectionBase from '@/components/sections/SectionBase.vue';
@@ -38,17 +39,18 @@ export default defineComponent({
   },
   data() {
     return {
-      sectionTypes: ['text', 'cards', 'pokemons'],
+      sectionTypes: ['text', 'cards', 'pokemons'] as SectionTypes[],
       selectedSectionType: '',
     };
   },
   methods: {
     getSectionByType(type: SectionTypes) {
-      const sectionsMap = {
+      const sectionsMap: Record<SectionTypes, Component> = {
         text: SectionText,
         cards: SectionCards,
         pokemons: SectionPokemons,
       };
+
       return sectionsMap[type];
     },
     resetData() {
@@ -58,6 +60,7 @@ export default defineComponent({
       if (!this.selectedSectionType) {
         return;
       }
+
       this.$store.dispatch('addNewSection', this.selectedSectionType);
       this.resetData();
     },
@@ -82,25 +85,28 @@ export default defineComponent({
 
 <template>
   <v-container>
-    <Stack direction="column" :gap="4">
+    <Stack
+      direction="column"
+      :gap="4"
+    >
       <template v-if="!!sections.length">
         <Draggable
+          v-model="sections"
           class="stack"
           tag="div"
           group="sections"
           ghostClass="ghost"
           draggable=".draggable"
           handle=".handle"
-          :forceFallback="true"
           :scrollSensitivity="200"
-          v-model="sections"
           :disabled="!isOnEditMod"
-          :move="isDragAllowed"
+          forceFallback
+          @move="() => isDragAllowed"
         >
           <template v-for="section of sections">
             <component
-              :is="getSectionByType(section.type)"
               :key="section.id"
+              :is="getSectionByType(section.type)"
               :class="{ draggable: sections.length !== 1 }"
               :data="section.data"
               @deleteSection="deleteSectionById(section.id)"
@@ -124,19 +130,19 @@ export default defineComponent({
       <template v-if="isOnEditMod">
         <SectionBase>
           <v-select
+            v-model="selectedSectionType"
             class="align-self-center"
             label="Section Type"
-            outlined
-            hide-details
-            v-model="selectedSectionType"
             :items="sectionTypes"
+            outlined
+            hideDetails
           />
           <v-btn
             class="align-self-center"
             color="primary"
+            :disabled="!selectedSectionType"
             text
             outlined
-            :disabled="!selectedSectionType"
             @click="addNewSection"
           >
             Add New Section

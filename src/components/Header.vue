@@ -18,13 +18,16 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-app-bar app color="white" elevation="0">
+  <v-app-bar
+    color="white"
+    :elevation="0"
+    app
+  >
     <v-container>
       <v-row justify="center">
         <v-switch
           v-model="isOnEditMod"
-          :label="isOnEditMod ? 'Edit mode' : 'View mode'"
-          hide-details
+          hideDetails
         />
       </v-row>
     </v-container>
