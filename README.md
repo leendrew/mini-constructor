@@ -2,7 +2,7 @@
 
 ## Description
 
-Simple page builder of 3 types of sections:
+Simple page builder with 3 types of sections:
 
 - Text, which contains title and description;
 - Cards, which contains cards with icon, title and description;
@@ -14,23 +14,23 @@ Simple page builder of 3 types of sections:
 
 ## Features
 
-- Switch between View and Edit modes;
-- Add new Section;
-- Delete Section;
-- Synchronize Sections state to local storage;
+- Switch between View and Edit modes
+- Add new Section
+- Delete Section
+- Synchronize Sections state to local storage
 - Text Section:
   - On Edit mode:
-    - Change title or description.
+    - Change title or description
 - Cards Section:
   - On Edit mode:
-    - Change icon, title or description of each card;
-    - Delete card;
-    - Move cards between each other and other cards sections.
+    - Change icon, title or description of each card
+    - Delete card
+    - Move cards between each other and other cards sections
 - Pokemons Section:
   - On Edit mode:
-    - Load 5 more pokemons;
-    - Filter them by name using text input;
-    - Move cards between each other and other cards sections.
+    - Load 5 more pokemons
+    - Filter them by name using text input
+    - Move cards between each other and other cards sections
 
 ## Stack
 
