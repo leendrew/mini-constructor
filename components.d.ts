@@ -7,8 +7,10 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AppHeader: typeof import('./src/components/AppHeader.vue')['default']
     CardBase: typeof import('./src/components/CardBase.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']
+    ModeToggler: typeof import('./src/components/ModeToggler.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SectionBase: typeof import('./src/components/sections/SectionBase.vue')['default']

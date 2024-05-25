@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Header from '@/components/Header.vue';
+import AppHeader from '@/components/AppHeader.vue';
 
 export default defineComponent({
   name: 'App',
@@ -9,7 +9,7 @@ export default defineComponent({
 
 <template>
   <v-app>
-    <Header />
+    <AppHeader />
     <v-main>
       <router-view />
     </v-main>
@@ -19,6 +19,10 @@ export default defineComponent({
 <style>
 html {
   overflow-y: auto;
+}
+
+.d-contents {
+  display: contents;
 }
 
 .stack {
