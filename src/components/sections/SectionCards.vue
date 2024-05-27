@@ -158,7 +158,6 @@ export default defineComponent({
   >
     <Draggable
       tag="div"
-      class="grid"
       group="cards"
       ghostClass="ghost"
       draggable=".draggable"
@@ -170,78 +169,128 @@ export default defineComponent({
       @move="() => isDragAllowed"
       @change="onChange"
     >
-      <template v-for="card of data">
-        <CardBase
-          :key="card.id"
-          :class="{ draggable: isDragAllowed }"
-        >
-          <template v-if="isDragAllowed">
-            <v-icon
-              class="handle align-self-start"
-              large
-            >
-              mdi-drag
-            </v-icon>
-          </template>
-          <template v-if="!checkIsCardOnEditMod(card.id)">
-            <v-icon
-              class="icon"
-              color="primary"
-            >
-              {{ card.icon }}
-            </v-icon>
-            <h4 class="ws-pw text-h5 pr-5">{{ card.title }}</h4>
-            <p class="ws-pw text-body-1 mb-0 flex-grow-1">{{ card.description }}</p>
-            <template v-if="isOnEditMod">
-              <Stack :gap="3">
-                <v-btn
-                  color="amber"
-                  text
-                  outlined
-                  @click="addCardToEditMod(card)"
-                >
-                  Edit
-                </v-btn>
-                <v-btn
-                  color="red"
-                  text
-                  outlined
-                  @click="deleteCard(card.id)"
-                >
-                  Delete
-                </v-btn>
-              </Stack>
+      <div class="grid">
+        <template v-for="card of data">
+          <CardBase
+            :key="card.id"
+            :class="{ draggable: isDragAllowed }"
+          >
+            <template v-if="isDragAllowed">
+              <VIcon
+                class="handle align-self-start"
+                large
+              >
+                mdi-drag
+              </VIcon>
             </template>
-          </template>
-          <template v-else>
-            <v-select
-              v-model="cardsOnEditMod[card.id].icon"
+            <template v-if="!checkIsCardOnEditMod(card.id)">
+              <VIcon
+                class="icon"
+                color="primary"
+              >
+                {{ card.icon }}
+              </VIcon>
+              <h4 class="ws-pw text-h5 pr-5">{{ card.title }}</h4>
+              <p class="ws-pw text-body-1 mb-0 flex-grow-1">{{ card.description }}</p>
+              <template v-if="isOnEditMod">
+                <Stack :gap="3">
+                  <VBtn
+                    color="amber"
+                    text
+                    outlined
+                    @click="addCardToEditMod(card)"
+                  >
+                    Edit
+                  </VBtn>
+                  <VBtn
+                    color="red"
+                    text
+                    outlined
+                    @click="deleteCard(card.id)"
+                  >
+                    Delete
+                  </VBtn>
+                </Stack>
+              </template>
+            </template>
+            <template v-else>
+              <VSelect
+                v-model="cardsOnEditMod[card.id].icon"
+                label="Icon"
+                :items="icons"
+                :prependInnerIcon="cardsOnEditMod[card.id].icon"
+                outlined
+                hideDetails
+              >
+                <template #item="{ item, props }">
+                  <Stack :gap="3">
+                    <VIcon
+                      color="primary"
+                      v-bind="props"
+                    >
+                      {{ item.value }}
+                    </VIcon>
+                    {{ item.text }}
+                  </Stack>
+                </template>
+              </VSelect>
+              <VTextField
+                v-model.trim="cardsOnEditMod[card.id].title"
+                label="Title"
+                outlined
+                hideDetails
+              />
+              <VTextarea
+                v-model.trim="cardsOnEditMod[card.id].description"
+                class="flex-grow-1"
+                label="Description"
+                :rows="3"
+                outlined
+                autoGrow
+                hideDetails
+              />
+              <VBtn
+                color="primary"
+                :disabled="!checkIsDataEmpty(cardsOnEditMod[card.id])"
+                text
+                outlined
+                @click="updateCard(cardsOnEditMod[card.id])"
+              >
+                Save
+              </VBtn>
+            </template>
+          </CardBase>
+        </template>
+        <template v-if="isOnEditMod">
+          <CardBase>
+            <VSelect
+              v-model="cardsOnEditMod[newCardId].icon"
               label="Icon"
               :items="icons"
-              :prependInnerIcon="cardsOnEditMod[card.id].icon"
+              :prependInnerIcon="cardsOnEditMod[newCardId].icon"
               outlined
               hideDetails
             >
               <template #item="{ item, props }">
                 <Stack :gap="3">
-                  <v-icon
-                    color="primary"
+                  <VIcon
                     v-bind="props"
+                    color="primary"
                   >
                     {{ item.value }}
-                  </v-icon>
+                  </VIcon>
                   {{ item.text }}
                 </Stack>
               </template>
-            </v-select>
-            <v-text-field
-              v-model.trim="cardsOnEditMod[card.id].title"
+            </VSelect>
+            <VTextField
+              v-model.trim="cardsOnEditMod[newCardId].title"
               label="Title"
               outlined
               hideDetails
             />
-            <v-textarea
-              v-model.trim="cardsOnEditMod[card.id].description"
+            <VTextarea
+              v-model.trim="cardsOnEditMod[newCardId].description"
               class="flex-grow-1"
               label="Description"
               :rows="3"
@@ -249,66 +298,18 @@ export default defineComponent({
               autoGrow
               hideDetails
             />
-            <v-btn
+            <VBtn
               color="primary"
-              :disabled="!checkIsDataEmpty(cardsOnEditMod[card.id])"
+              :disabled="!checkIsDataEmpty(cardsOnEditMod[newCardId])"
               text
               outlined
-              @click="updateCard(cardsOnEditMod[card.id])"
+              @click="addCard(cardsOnEditMod[newCardId])"
             >
-              Save
-            </v-btn>
-          </template>
-        </CardBase>
-      </template>
-      <template v-if="isOnEditMod">
-        <CardBase>
-          <v-select
-            v-model="cardsOnEditMod[newCardId].icon"
-            label="Icon"
-            :items="icons"
-            :prependInnerIcon="cardsOnEditMod[newCardId].icon"
-            outlined
-            hideDetails
-          >
-            <template #item="{ item, props }">
-              <Stack :gap="3">
-                <v-icon
-                  v-bind="props"
-                  color="primary"
-                >
-                  {{ item.value }}
-                </v-icon>
-                {{ item.text }}
-              </Stack>
-            </template>
-          </v-select>
-          <v-text-field
-            v-model.trim="cardsOnEditMod[newCardId].title"
-            label="Title"
-            outlined
-            hideDetails
-          />
-          <v-textarea
-            v-model.trim="cardsOnEditMod[newCardId].description"
-            class="flex-grow-1"
-            label="Description"
-            :rows="3"
-            outlined
-            autoGrow
-            hideDetails
-          />
-          <v-btn
-            color="primary"
-            :disabled="!checkIsDataEmpty(cardsOnEditMod[newCardId])"
-            text
-            outlined
-            @click="addCard(cardsOnEditMod[newCardId])"
-          >
-            Add New Card
-          </v-btn>
-        </CardBase>
-      </template>
+              Add New Card
+            </VBtn>
+          </CardBase>
+        </template>
+      </div>
     </Draggable>
   </SectionBase>
 </template>
@@ -319,6 +320,7 @@ export default defineComponent({
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
   gap: 16px;
 }
+
 .icon {
   position: absolute;
   right: 8px;

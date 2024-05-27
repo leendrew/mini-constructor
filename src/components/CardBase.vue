@@ -11,7 +11,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-sheet
+  <VSheet
     tag="article"
     class="pa-4 card"
     rounded
@@ -24,13 +24,14 @@ export default defineComponent({
     >
       <slot />
     </Stack>
-  </v-sheet>
+  </VSheet>
 </template>
 
 <style scoped>
 .card {
   position: relative;
 }
+
 .card-inner {
   height: 100%;
 }

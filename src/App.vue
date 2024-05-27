@@ -8,12 +8,12 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-app>
+  <VApp>
     <AppHeader />
-    <v-main>
-      <router-view />
-    </v-main>
-  </v-app>
+    <VMain>
+      <RouterView />
+    </VMain>
+  </VApp>
 </template>
 
 <style>

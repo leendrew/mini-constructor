@@ -84,7 +84,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-container>
+  <VContainer>
     <Stack
       direction="column"
       :gap="4"
@@ -135,7 +135,7 @@ export default defineComponent({
       </template>
       <template v-if="isOnEditMod">
         <SectionBase>
-          <v-select
+          <VSelect
             v-model="selectedSectionType"
             class="align-self-center"
             label="Section Type"
@@ -143,7 +143,7 @@ export default defineComponent({
             outlined
             hideDetails
           />
-          <v-btn
+          <VBtn
             class="align-self-center"
             color="primary"
             :disabled="!selectedSectionType"
@@ -152,9 +152,9 @@ export default defineComponent({
             @click="addNewSection"
           >
             Add New Section
-          </v-btn>
+          </VBtn>
         </SectionBase>
       </template>
     </Stack>
-  </v-container>
+  </VContainer>
 </template>

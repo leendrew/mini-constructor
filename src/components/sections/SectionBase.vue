@@ -27,7 +27,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-sheet
+  <VSheet
     tag="section"
     class="pa-6"
     rounded
@@ -38,16 +38,16 @@ export default defineComponent({
       :gap="4"
     >
       <template v-if="!hideHandle">
-        <v-icon
+        <VIcon
           class="handle align-self-start"
           large
         >
           mdi-drag
-        </v-icon>
+        </VIcon>
       </template>
       <slot />
       <template v-if="!hideAction">
-        <v-btn
+        <VBtn
           class="align-self-start"
           color="red"
           text
@@ -55,8 +55,8 @@ export default defineComponent({
           @click="deleteSection"
         >
           Delete Section
-        </v-btn>
+        </VBtn>
       </template>
     </Stack>
-  </v-sheet>
+  </VSheet>
 </template>

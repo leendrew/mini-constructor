@@ -80,7 +80,7 @@ export default defineComponent({
       <h4 class="ws-pw text-h4">{{ data.title }}</h4>
       <p class="ws-pw text-body-1 mb-0">{{ data.description }}</p>
       <template v-if="isOnEditMod">
-        <v-btn
+        <VBtn
           class="align-self-start"
           color="amber"
           text
@@ -88,17 +88,17 @@ export default defineComponent({
           @click="toggleLocalEditMod"
         >
           Edit
-        </v-btn>
+        </VBtn>
       </template>
     </template>
     <template v-else>
-      <v-text-field
+      <VTextField
         v-model.trim="title"
         label="Title"
         outlined
         hideDetails
       />
-      <v-textarea
+      <VTextarea
         v-model.trim="description"
         label="Description"
         :rows="3"
@@ -106,7 +106,7 @@ export default defineComponent({
         autoGrow
         hideDetails
       />
-      <v-btn
+      <VBtn
         class="align-self-start"
         color="primary"
         :disabled="!isEmpty"
@@ -115,7 +115,7 @@ export default defineComponent({
         @click="updateData"
       >
         Save
-      </v-btn>
+      </VBtn>
     </template>
   </SectionBase>
 </template>

@@ -93,7 +93,7 @@ export default defineComponent({
     :hideAction="!isOnEditMod"
     @deleteSection="deleteSection"
   >
-    <v-text-field
+    <VTextField
       v-model.trim="searchValue"
       class="align-self-center"
       label="Name"
@@ -123,24 +123,24 @@ export default defineComponent({
             :class="{ draggable: isDragAllowed }"
           >
             <template v-if="isDragAllowed">
-              <v-icon
+              <VIcon
                 class="handle align-self-start"
                 large
               >
                 mdi-drag
-              </v-icon>
+              </VIcon>
             </template>
-            <v-img :src="pokemon.imageUrl" />
+            <VImg :src="pokemon.imageUrl" />
             <h4 class="text-h5">{{ pokemon.name }}</h4>
             <template v-if="isOnEditMod">
-              <v-btn
+              <VBtn
                 color="red"
                 text
                 outlined
                 @click="deletePokemon(pokemon.id)"
               >
                 Delete
-              </v-btn>
+              </VBtn>
             </template>
           </CardBase>
         </template>
@@ -150,7 +150,7 @@ export default defineComponent({
       <p class="text-h5 text-center">No search matches :(</p>
     </template>
     <template v-if="isOnEditMod">
-      <v-btn
+      <VBtn
         class="align-self-start"
         color="primary"
         text
@@ -158,7 +158,7 @@ export default defineComponent({
         @click="fetchPokemons"
       >
         Fetch More Pokemons
-      </v-btn>
+      </VBtn>
     </template>
   </SectionBase>
 </template>

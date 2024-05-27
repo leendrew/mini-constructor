@@ -24,7 +24,7 @@ export default defineComponent({
 <template>
   <Stack :gap="4">
     <span :class="{ 'grey--text': isOnEditMod }">View Mode</span>
-    <v-switch
+    <VSwitch
       v-model="isOnEditMod"
       hideDetails
     />

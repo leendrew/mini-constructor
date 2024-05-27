@@ -13,15 +13,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-app-bar
+  <VAppBar
     color="white"
     :elevation="1"
     app
   >
-    <v-container>
+    <VContainer>
       <Stack justify="center">
         <ModeToggler />
       </Stack>
-    </v-container>
-  </v-app-bar>
+    </VContainer>
+  </VAppBar>
 </template>
