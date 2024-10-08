@@ -156,20 +156,21 @@ export default defineComponent({
     :hideAction="!isOnEditMod"
     @deleteSection="deleteSection"
   >
-    <Draggable
-      tag="div"
-      group="cards"
-      ghostClass="ghost"
-      draggable=".draggable"
-      handle=".handle"
-      :scrollSensitivity="200"
-      :list="data"
-      :disabled="!isOnEditMod"
-      forceFallback
-      @move="() => isDragAllowed"
-      @change="onChange"
-    >
-      <div class="grid">
+    <div class="grid">
+      <Draggable
+        tag="div"
+        class="d-contents"
+        group="cards"
+        ghostClass="ghost"
+        draggable=".draggable"
+        handle=".handle"
+        :scrollSensitivity="200"
+        :list="data"
+        :disabled="!isOnEditMod"
+        forceFallback
+        @move="() => isDragAllowed"
+        @change="onChange"
+      >
         <template v-for="card of data">
           <CardBase
             :key="card.id"
@@ -309,8 +310,8 @@ export default defineComponent({
             </VBtn>
           </CardBase>
         </template>
-      </div>
-    </Draggable>
+      </Draggable>
+    </div>
   </SectionBase>
 </template>
 

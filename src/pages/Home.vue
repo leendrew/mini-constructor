@@ -90,21 +90,22 @@ export default defineComponent({
       :gap="4"
     >
       <template v-if="!!sections.length">
-        <Draggable
-          v-model="sections"
-          tag="div"
-          group="sections"
-          ghostClass="ghost"
-          draggable=".draggable"
-          handle=".handle"
-          :scrollSensitivity="200"
-          :disabled="!isOnEditMod"
-          forceFallback
-          @move="() => isDragAllowed"
+        <Stack
+          direction="column"
+          :gap="4"
         >
-          <Stack
-            direction="column"
-            :gap="4"
+          <Draggable
+            v-model="sections"
+            tag="div"
+            class="d-contents"
+            group="sections"
+            ghostClass="ghost"
+            draggable=".draggable"
+            handle=".handle"
+            :scrollSensitivity="200"
+            :disabled="!isOnEditMod"
+            forceFallback
+            @move="() => isDragAllowed"
           >
             <template v-for="section of sections">
               <component
@@ -122,8 +123,8 @@ export default defineComponent({
                 "
               />
             </template>
-          </Stack>
-        </Draggable>
+          </Draggable>
+        </Stack>
       </template>
       <template v-else-if="!isOnEditMod">
         <SectionBase>
